@@ -28,9 +28,9 @@ public class CommonsCoreException extends RuntimeException
         this.message = message;
     }
 
-    public CommonsCoreException(String resultCode)
+    public CommonsCoreException(String message)
     {
         super();
-        this.resultCode = resultCode;
+        this.message = message;
     }
 }
