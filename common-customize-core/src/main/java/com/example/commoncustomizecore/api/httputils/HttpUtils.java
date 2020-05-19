@@ -1,17 +1,20 @@
 package com.example.commoncustomizecore.api.httputils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.commoncustomizecore.api.bean.BeanUtils;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -23,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +42,30 @@ public class HttpUtils
 //    private static final Log LOG = LogFactory.getLog(HttpUtils.class);
 
     /**
+     * http发送get请求 参数list NameValuePair
+     * @param params 请求参数
+     * @param url 请求地址
+     * @return
+     */
+    public static String sendGet(List<NameValuePair> params, String url)
+    {
+        if (StringUtils.isBlank(url))
+        {
+            throw new CommonsCoreException("httpClient: url不能为空");
+        }
+        try
+        {
+            URIBuilder builder = new URIBuilder(url);
+            builder.setParameters(params);
+            HttpGet httpGet = new HttpGet(builder.build());
+            return request(httpGet);
+        } catch (URISyntaxException e)
+        {
+            throw new CommonsCoreException("httpClient: " + e.getMessage());
+        }
+    }
+
+    /**
      * httpClient发送get请求
      * @param url 请求地址
      * @param param 请求参数
@@ -50,43 +78,27 @@ public class HttpUtils
             throw new CommonsCoreException("httpClient: url不能为空");
         }
 
-        String rsp = null;
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        HttpGet get = new HttpGet(url + param);
-        CloseableHttpResponse response = null;
-        try
-        {
-            response = httpClient.execute(get);
-            if (response != null && response.getStatusLine().getStatusCode() == 200)
-            {
-                HttpEntity entity = response.getEntity();
-                rsp = EntityUtils.toString(entity, "UTF-8");
-            }
-
-            getTrance(response);
-
-            return rsp;
-        } catch (IOException e)
-        {
-//            LOGGER.error(e.getMessage(), e);
-            throw new CommonsCoreException("httpClient请求异常");
-        } finally
-        {
-            try
-            {
-                httpClient.close();
-                if (response != null)
-                {
-                    response.close();
-                }
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+        HttpGet httpGet = new HttpGet(url + "?" + param);
+        return request(httpGet);
     }
+
+    /**
+     * httpClient发送get请求 无参数
+     * @param url 请求地址
+     * @return
+     */
+    public static String sendGet(String url)
+    {
+        if (StringUtils.isBlank(url))
+        {
+            throw new CommonsCoreException("httpClient: url不能为空");
+        }
+
+        HttpGet httpGet = new HttpGet(url);
+        return request(httpGet);
+    }
+
+
 
     /**
      * httpClient发送post请求 application/x-www-form-urlencoded
@@ -108,11 +120,10 @@ public class HttpUtils
             // 构造httpPost对象
             HttpPost post = new HttpPost(url.trim());
 
-            return send(reqEntity, post);
+            return doPost(reqEntity, post);
         } catch (UnsupportedEncodingException e)
         {
-//            LOGGER.error(e.getMessage(), e);
-            throw new CommonsCoreException("httpClient请求异常");
+            throw new CommonsCoreException("httpClient: " + e.getMessage());
         }
     }
 
@@ -136,7 +147,26 @@ public class HttpUtils
         HttpPost post = new HttpPost(url.trim());
         post.setHeader("Content-Type", "application/json");
 
-        return send(reqEntity, post);
+        return doPost(reqEntity, post);
+
+    }
+
+    /**
+     * post请求 无参数
+     * @param url 请求地址
+     * @return
+     */
+    public static String sendPost(String url)
+    {
+        if (StringUtils.isBlank(url))
+        {
+            throw new CommonsCoreException("httpClient: url不能为空");
+        }
+
+        // 构造httpPost对象
+        HttpPost post = new HttpPost(url.trim());
+
+        return doPost(new StringEntity(null, "utf-8"), post);
 
     }
 
@@ -157,96 +187,6 @@ public class HttpUtils
             }
         }
         return pairList;
-    }
-
-    /**
-     * 发送请求
-     * @param req
-     * @param httpPost
-     * @param <T>
-     * @return
-     */
-    private static <T extends HttpEntity> String send(T req, HttpPost httpPost)
-    {
-        CloseableHttpClient httpClient = null;
-        CloseableHttpResponse response = null;
-        try
-        {
-//            StringEntity reqEntity = new StringEntity(requestData, "utf-8");
-            RequestConfig requestConfig = RequestConfig.custom()
-                    .setConnectTimeout(5000)//一、连接超时：connectionTimeout-->指的是连接一个url的连接等待时间
-                    .setSocketTimeout(5000)// 二、读取数据超时：SocketTimeout-->指的是连接上一个url，获取response的返回等待时间
-                    .setConnectionRequestTimeout(5000)
-                    .build();
-            // 构造httpClient对象
-            httpClient = HttpClients.createDefault();
-            // 构造httpPost对象
-//            HttpPost post = new HttpPost(url.trim());
-//            post.setHeader("Content-Type", "application/json");
-            httpPost.setEntity(req);
-            httpPost.setConfig(requestConfig);
-
-            String rsp = null;
-            response = httpClient.execute(httpPost);
-            if (response != null && response.getStatusLine().getStatusCode() == 200)
-            {
-                HttpEntity entity = response.getEntity();
-                rsp = EntityUtils.toString(entity, "UTF-8");
-            } else
-            {
-                throw new CommonsCoreException(String.valueOf(response.getStatusLine().getStatusCode()));
-            }
-            getTrance(response);
-            return rsp;
-        } catch (UnsupportedEncodingException e)
-        {
-//            LOGGER.error(e.getMessage(), e);
-            throw new CommonsCoreException("httpClient请求异常");
-        } catch (ClientProtocolException e)
-        {
-//            LOGGER.error(e.getMessage(), e);
-            throw new CommonsCoreException("httpClient请求异常");
-        } catch (IOException e)
-        {
-//            LOGGER.error(e.getMessage(), e);
-            throw new CommonsCoreException("httpClient请求异常");
-        } finally
-        {
-            if (httpClient != null)
-            {
-                try
-                {
-                    httpClient.close();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            if (response != null)
-            {
-                try
-                {
-                    response.close();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * 日志跟踪号
-     * @param response
-     */
-    private static void getTrance(CloseableHttpResponse response)
-    {
-        Header [] headers = response.getHeaders("tranceId");
-        for (Header header : headers)
-        {
-            LOGGER.info("name = {}, value = {}", header.getName(), header.getValue());
-        }
     }
 
     /**
@@ -289,6 +229,102 @@ public class HttpUtils
         });
         return pairs;
     }
+
+    /**
+     * 发送请求
+     * @param req 请求参数
+     * @param httpPost http对象
+     * @param <T>
+     * @return
+     */
+    private static <T extends HttpEntity> String doPost(T req, HttpPost httpPost)
+    {
+        //            StringEntity reqEntity = new StringEntity(requestData, "utf-8");
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(5000)//一、连接超时：connectionTimeout-->指的是连接一个url的连接等待时间
+                .setSocketTimeout(5000)// 二、读取数据超时：SocketTimeout-->指的是连接上一个url，获取response的返回等待时间
+                .setConnectionRequestTimeout(5000)
+                .build();
+        // 构造httpClient对象
+
+        // 构造httpPost对象
+//            HttpPost post = new HttpPost(url.trim());
+//            post.setHeader("Content-Type", "application/json");
+        httpPost.setEntity(req);
+        httpPost.setConfig(requestConfig);
+        return request(httpPost);
+    }
+
+
+
+    /**
+     * 发送http请求
+     * @param httpInfo http对象
+     * @param <T>HttpRequestBase
+     * @return
+     */
+    private static <T extends HttpRequestBase> String request(T httpInfo)
+    {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        try
+        {
+            String rsp = null;
+            response = httpClient.execute(httpInfo);
+            if (response != null)
+            {
+                getTrance(response);
+                HttpEntity entity = response.getEntity();
+                rsp = EntityUtils.toString(entity, "UTF-8");
+                if (response.getStatusLine().getStatusCode() == 200)
+                {
+                    return rsp;
+                } else
+                {
+                    JSONObject jsonObject = JSON.parseObject(rsp);
+                    LOGGER.error(rsp);
+                    throw new CommonsCoreException(String.valueOf(response.getStatusLine().getStatusCode()),
+                            jsonObject.getString("error"));
+                }
+
+            } else
+            {
+                throw new CommonsCoreException("httpClient: response is null");
+            }
+        } catch (IOException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            throw new CommonsCoreException("httpClient: " + e.getMessage());
+        } finally
+        {
+            try
+            {
+                httpClient.close();
+                if (response != null)
+                {
+                    response.close();
+                }
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 日志跟踪号
+     * @param response
+     */
+    private static void getTrance(CloseableHttpResponse response)
+    {
+        Header [] headers = response.getHeaders("tranceId");
+        for (Header header : headers)
+        {
+            LOGGER.info("tranceId = {}", header.getValue());
+        }
+    }
+
+
 
 
 }
