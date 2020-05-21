@@ -78,12 +78,12 @@
 			<version>2.12.1</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>1.7.30</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>-->
 		<!-- logback -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -96,6 +96,15 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.68</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<!--<build>
