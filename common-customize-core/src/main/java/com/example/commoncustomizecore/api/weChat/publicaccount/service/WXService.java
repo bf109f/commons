@@ -6,8 +6,9 @@ import com.example.commoncustomizecore.api.weChat.publicaccount.req.GetTokenReq;
 import com.example.commoncustomizecore.api.weChat.publicaccount.req.SendKfTextMessageReq;
 import com.example.commoncustomizecore.api.weChat.publicaccount.req.SendTemplateMessageReq;
 import com.example.commoncustomizecore.api.weChat.publicaccount.rsp.GetTokenRsp;
+import com.example.commoncustomizecore.api.weChat.publicaccount.rsp.WXBaseRsp;
 
-public interface IService
+public interface WXService
 {
     /**
      * 获取token
@@ -29,15 +30,17 @@ public interface IService
      * 发送客服消息
      * @param req
      * @param token
+     * @return
      * @throws CommonsCoreException
      */
-    void sendKfMessage(SendKfTextMessageReq req, String token) throws CommonsCoreException;
+    WXBaseRsp sendKfMessage(SendKfTextMessageReq req, String token) throws CommonsCoreException;
 
     /**
      * 发送客服消息
      * @param req
      * @param token
+     * @return
      * @throws CommonsCoreException
      */
-    void sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException;
+    WXBaseRsp sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException;
 }
