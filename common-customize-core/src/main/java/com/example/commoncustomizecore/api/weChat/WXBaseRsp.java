@@ -1,15 +1,21 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req.info;
+package com.example.commoncustomizecore.api.weChat;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
-@AllArgsConstructor
-public class TextInfo
+public class WXBaseRsp
 {
-    private String content;
+    /**
+     * 响应码
+     */
+    private Integer errcode;
+
+    /**
+     * 响应信息
+     */
+    private String errmsg;
 
     @Override
     public String toString()

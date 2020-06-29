@@ -1,4 +1,4 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req;
+package com.example.commoncustomizecore.api.weChat.officialaccounts.req;
 
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;

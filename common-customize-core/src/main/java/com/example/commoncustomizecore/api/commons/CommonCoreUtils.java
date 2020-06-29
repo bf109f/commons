@@ -8,4 +8,5 @@ public class CommonCoreUtils
     {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
 }

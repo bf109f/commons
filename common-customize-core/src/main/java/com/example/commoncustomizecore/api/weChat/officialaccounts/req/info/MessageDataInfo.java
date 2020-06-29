@@ -1,4 +1,4 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req.info;
+package com.example.commoncustomizecore.api.weChat.officialaccounts.req.info;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

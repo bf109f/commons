@@ -1,12 +1,14 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req;
+package com.example.commoncustomizecore.api.weChat.officialaccounts.req;
 
-import com.example.commoncustomizecore.api.weChat.publicaccount.req.info.TextInfo;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.MessageDataInfo;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.List;
+
 @Data
-public class SendKfTextMessageReq
+public class GetTemplateListReq
 {
     /**
      * 接收消息者
@@ -14,14 +16,19 @@ public class SendKfTextMessageReq
     private String touser;
 
     /**
-     * 消息类型
+     * 模板ID
      */
-    private String msgtype = "text";
+    private String template_id;
+
+    /**
+     * 模板跳转链接
+     */
+    private String url;
 
     /**
      * 消息内容
      */
-    private TextInfo text;
+    private List<MessageDataInfo> data;
 
     @Override
     public String toString()

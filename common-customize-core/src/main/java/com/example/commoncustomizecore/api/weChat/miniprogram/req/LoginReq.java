@@ -1,19 +1,14 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req;
+package com.example.commoncustomizecore.api.weChat.miniprogram.req;
 
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
-public class GetTokenReq
+public class LoginReq
 {
     /**
-     * 获取access_token填写client_credential
-     */
-    private String grant_type = "client_credential";
-
-    /**
-     * appId
+     * appid
      */
     private String appid;
 
@@ -21,6 +16,16 @@ public class GetTokenReq
      * appSecret
      */
     private String secret;
+
+    /**
+     * 登录时获取的 code
+     */
+    private String js_code;
+
+    /**
+     * 授权类型，此处只需填写 authorization_code
+     */
+    private String grant_type = "authorization_code";
 
     @Override
     public String toString()

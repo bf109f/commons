@@ -1,7 +1,7 @@
-package com.example.commoncustomizecore.api.weChat.publicaccount.req;
+package com.example.commoncustomizecore.api.weChat.officialaccounts.req;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.commoncustomizecore.api.weChat.publicaccount.req.info.MessageDataInfo;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.MessageDataInfo;
 import lombok.Data;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
