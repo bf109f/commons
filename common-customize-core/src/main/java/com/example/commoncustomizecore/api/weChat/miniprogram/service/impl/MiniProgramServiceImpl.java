@@ -5,10 +5,8 @@ import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.httputils.HttpUtils;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetCategoryRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetPubTemplateTitleListRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetTemplateListRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.LoginRsp;
+import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendTemplateMessageReq;
+import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.*;
 import com.example.commoncustomizecore.api.weChat.miniprogram.service.MiniProgramService;
 import org.apache.http.NameValuePair;
 import org.slf4j.Logger;
@@ -57,5 +55,16 @@ public class MiniProgramServiceImpl extends MiniProgramService
         LOG.info("GetTemplateListRsp = {}", rsp);
         GetTemplateListRsp listRsp = JSON.parseObject(rsp, GetTemplateListRsp.class);
         return listRsp;
+    }
+
+    @Override
+    public SendTemplateMessageRsp sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException
+    {
+        List<NameValuePair> pairs = HttpUtils.obj2List(req);
+        String rsp = HttpUtils.sendPost(pairs, "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token" +
+                "=" + token);
+        LOG.info("SendTemplateMessageRsp = {}", rsp);
+        SendTemplateMessageRsp sendRsp = JSON.parseObject(rsp, SendTemplateMessageRsp.class);
+        return sendRsp;
     }
 }

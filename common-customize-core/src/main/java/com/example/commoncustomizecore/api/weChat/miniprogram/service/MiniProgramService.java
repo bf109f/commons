@@ -4,10 +4,8 @@ import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.weChat.WXService;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetCategoryRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetPubTemplateTitleListRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.GetTemplateListRsp;
-import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.LoginRsp;
+import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendTemplateMessageReq;
+import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.*;
 
 public abstract class MiniProgramService extends WXService
 {
@@ -41,5 +39,13 @@ public abstract class MiniProgramService extends WXService
      * @throws CommonsCoreException
      */
     public abstract GetTemplateListRsp getTemplateList(String token) throws CommonsCoreException;
+
+    /**
+     * 发送模板消息
+     * @param req
+     * @return
+     * @throws CommonsCoreException
+     */
+    public abstract SendTemplateMessageRsp sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException;
 
 }
