@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
-public class SendTemplateMessageRsp extends WXBaseRsp
+public class SendMiniTemplateMessageRsp extends WXBaseRsp
 {
     @Override
     public String toString()

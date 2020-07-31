@@ -7,9 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Data
 public class GetPubTemplateTitlesReq
 {
-    /**
-     * token
-     */
     private String access_token;
 
     /**

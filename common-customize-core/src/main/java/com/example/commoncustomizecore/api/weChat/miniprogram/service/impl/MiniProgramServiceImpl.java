@@ -5,7 +5,7 @@ import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.httputils.HttpUtils;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
-import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendTemplateMessageReq;
+import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendMiniTemplateMessageReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.*;
 import com.example.commoncustomizecore.api.weChat.miniprogram.service.MiniProgramService;
 import org.apache.http.NameValuePair;
@@ -39,7 +39,7 @@ public class MiniProgramServiceImpl extends MiniProgramService
     }
 
     @Override
-    public GetPubTemplateTitleListRsp getPubTemplateTitleList(GetPubTemplateTitlesReq req) throws CommonsCoreException
+    public GetPubTemplateTitleListRsp getPubTemplateTitleList(GetPubTemplateTitlesReq req, String token) throws CommonsCoreException
     {
         List<NameValuePair> pairs = HttpUtils.obj2List(req);
         String rsp = HttpUtils.sendGet(pairs, "https://api.weixin.qq.com/wxaapi/newtmpl/getpubtemplatetitles");
@@ -58,13 +58,14 @@ public class MiniProgramServiceImpl extends MiniProgramService
     }
 
     @Override
-    public SendTemplateMessageRsp sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException
+    public SendMiniTemplateMessageRsp sendTemplateMessage(SendMiniTemplateMessageReq req, String token) throws CommonsCoreException
     {
-        List<NameValuePair> pairs = HttpUtils.obj2List(req);
-        String rsp = HttpUtils.sendPost(pairs, "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token" +
+//        List<NameValuePair> pairs = HttpUtils.obj2List(req);
+        String rsp = HttpUtils.sendPost(req.toString(), "https://api.weixin.qq.com/cgi-bin/message/subscribe/send" +
+                "?access_token" +
                 "=" + token);
-        LOG.info("SendTemplateMessageRsp = {}", rsp);
-        SendTemplateMessageRsp sendRsp = JSON.parseObject(rsp, SendTemplateMessageRsp.class);
+        LOG.info("SendMiniTemplateMessageRsp = {}", rsp);
+        SendMiniTemplateMessageRsp sendRsp = JSON.parseObject(rsp, SendMiniTemplateMessageRsp.class);
         return sendRsp;
     }
 }

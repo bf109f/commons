@@ -4,7 +4,7 @@ import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.weChat.WXService;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
-import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendTemplateMessageReq;
+import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendMiniTemplateMessageReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.*;
 
 public abstract class MiniProgramService extends WXService
@@ -28,9 +28,10 @@ public abstract class MiniProgramService extends WXService
     /**
      * 获取帐号所属类目下的公共模板标题
      * @param req
+     * @param token
      * @throws CommonsCoreException
      */
-    public abstract GetPubTemplateTitleListRsp getPubTemplateTitleList(GetPubTemplateTitlesReq req) throws CommonsCoreException;
+    public abstract GetPubTemplateTitleListRsp getPubTemplateTitleList(GetPubTemplateTitlesReq req, String token) throws CommonsCoreException;
 
     /**
      * 获取当前帐号下的个人模板列表
@@ -46,6 +47,6 @@ public abstract class MiniProgramService extends WXService
      * @return
      * @throws CommonsCoreException
      */
-    public abstract SendTemplateMessageRsp sendTemplateMessage(SendTemplateMessageReq req, String token) throws CommonsCoreException;
+    public abstract SendMiniTemplateMessageRsp sendTemplateMessage(SendMiniTemplateMessageReq req, String token) throws CommonsCoreException;
 
 }

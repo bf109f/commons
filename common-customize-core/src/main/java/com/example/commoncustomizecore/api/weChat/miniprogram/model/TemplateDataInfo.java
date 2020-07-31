@@ -1,6 +1,8 @@
 package com.example.commoncustomizecore.api.weChat.miniprogram.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -8,6 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 模板消息数据
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TemplateDataInfo
 {
     /**
