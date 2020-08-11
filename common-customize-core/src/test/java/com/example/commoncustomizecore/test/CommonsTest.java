@@ -202,10 +202,10 @@ public class CommonsTest
         MiniTemplateInfo info = new MiniTemplateInfo();
         req.setTemplate_id(info.getTemplateId());
         req.setTouser(info.getToUser());
-        TemplateDataInfo dataInfo1 = new TemplateDataInfo("thing1", "健康打卡");
-        TemplateDataInfo dataInfo2 = new TemplateDataInfo("time2", "10:00");
-        TemplateDataInfo dataInfo3 = new TemplateDataInfo("time3", "11:00");
-        TemplateDataInfo dataInfo4 = new TemplateDataInfo("thing5", "养成每日习惯，迎接更好的自己。");
+        TemplateDataInfo dataInfo1 = new TemplateDataInfo("thing1", "下班打卡");
+        TemplateDataInfo dataInfo2 = new TemplateDataInfo("time2", "18:30");
+        TemplateDataInfo dataInfo3 = new TemplateDataInfo("thing3", "世纪广场");
+        TemplateDataInfo dataInfo4 = new TemplateDataInfo("thing4", "下班打卡");
         List<TemplateDataInfo> infos = new ArrayList<>();
         infos.add(dataInfo1);
         infos.add(dataInfo2);
@@ -213,6 +213,9 @@ public class CommonsTest
         infos.add(dataInfo4);
         req.setData(infos);
         miniService.sendTemplateMessage(req, token);
+        // {"errcode":47003,"errmsg":"argument invalid! data.thing3.value is emtpy rid: 5f325159-44411d21-1eb8b6c3"}
+        // {"errcode":0,"errmsg":"ok"}
+        // {"errcode":43101,"errmsg":"user refuse to accept the msg rid: 5f325211-48269097-7624df34"}
     }
 
 }
