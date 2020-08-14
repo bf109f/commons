@@ -1,6 +1,7 @@
 package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.commons.TimeUtils;
+import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
 import com.example.commoncustomizecore.api.weChat.miniprogram.model.TemplateDataInfo;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
@@ -14,13 +15,15 @@ import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendTempl
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.MessageDataInfo;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.TextInfo;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetTokenRsp;
-import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.OfficialAccountsService;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.impl.OfficialAccountsServiceImpl;
 import com.example.commoncustomizecore.info.MiniTemplateInfo;
 import com.example.commoncustomizecore.info.OfficialAccountsInfo;
 import com.example.commoncustomizecore.info.WeChatInfo;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
+import org.joda.time.Minutes;
 import org.junit.Test;
 
 import java.io.*;
@@ -216,6 +219,26 @@ public class CommonsTest
         // {"errcode":47003,"errmsg":"argument invalid! data.thing3.value is emtpy rid: 5f325159-44411d21-1eb8b6c3"}
         // {"errcode":0,"errmsg":"ok"}
         // {"errcode":43101,"errmsg":"user refuse to accept the msg rid: 5f325211-48269097-7624df34"}
+    }
+
+    @Test
+    public void dealTime()
+    {
+        DateTime dateTime1 = new DateTime(2020, 8, 14, 15, 40);
+        System.out.println(dateTime1.toString("yyyy-MM-dd HH:mm:ss"));
+        DateTime dateTime2 = new DateTime();
+        System.out.println(dateTime2.toString("yyyy-MM-dd HH:mm:ss"));
+        int diffMin = Minutes.minutesBetween(dateTime1, dateTime2).getMinutes();
+        int diffHour = Hours.hoursBetween(dateTime1, dateTime2).getHours();
+        System.out.println(diffMin);
+        System.out.println(diffHour);
+        System.out.println(dateTime2.getYear());
+        System.out.println(dateTime2.getDayOfYear());
+        System.out.println(dateTime2.getMonthOfYear());
+        System.out.println(dateTime2.getDayOfMonth());
+        System.out.println(dateTime2.getDayOfWeek());
+
+
     }
 
 }
