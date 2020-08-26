@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -238,7 +239,12 @@ public class CommonsTest
         System.out.println(dateTime2.getDayOfMonth());
         System.out.println(dateTime2.getDayOfWeek());
 
-
+        System.out.println("=========================================");
+        DateTime now = new DateTime();
+        System.out.println(now);
+        LocalDateTime localDateTime = TimeUtils.dateTime2LocalDateTime(now);
+        System.out.println(localDateTime);
+        System.out.println(TimeUtils.localDateTime2DateTime(localDateTime));
     }
 
 }

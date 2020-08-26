@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -55,5 +56,27 @@ public class TimeUtils
         DateTime dateTime = new DateTime();
 
         return dateTime.getDayOfWeek();
+    }
+
+    /**
+     * joda dateTime转jdk LocalDateTime
+     * @param dateTime joda dateTime
+     * @return
+     */
+    public static LocalDateTime dateTime2LocalDateTime(DateTime dateTime)
+    {
+        return LocalDateTime.of(dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfMonth(),
+                dateTime.getHourOfDay(), dateTime.getMinuteOfHour(), dateTime.getSecondOfMinute());
+    }
+
+    /**
+     * jdk LocalDateTime转joda dateTime
+     * @param localDateTime jdk LocalDateTime
+     * @return
+     */
+    public static DateTime localDateTime2DateTime(LocalDateTime localDateTime)
+    {
+        return new DateTime(localDateTime.getYear(), localDateTime.getMonthValue(), localDateTime.getDayOfMonth(),
+                localDateTime.getHour(), localDateTime.getMinute(), localDateTime.getSecond());
     }
 }
