@@ -255,7 +255,8 @@ public class CommonsTest
     public void sendGet()
     {
         Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
-        String rsp = HttpUtils.sendGet("{\"query\":{\"match\":{\"message\":\"000000\"}}}", "http://localhost:9200", header);
+        String rsp = HttpUtils.sendGet("{\"query\":{\"match\":{\"message\":\"000000\"}}}", "http://localhost:9200" +
+                "/filebeat-7.9.0/_search", header);
         System.out.println(rsp);
     }
 
