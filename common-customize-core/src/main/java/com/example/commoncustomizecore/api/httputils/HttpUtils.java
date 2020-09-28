@@ -83,6 +83,30 @@ public class HttpUtils
     }
 
     /**
+     * httpClient发送get请求
+     * @param param 请求参数
+     * @param url 请求地址
+     * @param headers 请求消息头
+     * @return
+     */
+    public static String sendGet(String param, String url, Header...headers)
+    {
+        if (StringUtils.isBlank(url))
+        {
+            throw new CommonsCoreException("httpClient: url不能为空");
+        }
+
+        HttpGet httpGet = new HttpGet(url + "?" + param);
+
+        for (Header header : headers)
+        {
+            httpGet.addHeader(header);
+        }
+
+        return request(httpGet);
+    }
+
+    /**
      * httpClient发送get请求 无参数
      * @param url 请求地址
      * @return
@@ -145,7 +169,7 @@ public class HttpUtils
 
         // 构造httpPost对象
         HttpPost post = new HttpPost(url.trim());
-        post.setHeader("Content-Type", "application/json");
+        post.setHeader("Content-Type", "application/json;charset=UTF-8");
 
         return doPost(reqEntity, post);
 

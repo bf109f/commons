@@ -1,6 +1,7 @@
 package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.commons.TimeUtils;
+import com.example.commoncustomizecore.api.httputils.HttpUtils;
 import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
 import com.example.commoncustomizecore.api.weChat.miniprogram.model.TemplateDataInfo;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.GetPubTemplateTitlesReq;
@@ -20,6 +21,9 @@ import com.example.commoncustomizecore.api.weChat.officialaccounts.service.impl.
 import com.example.commoncustomizecore.info.MiniTemplateInfo;
 import com.example.commoncustomizecore.info.OfficialAccountsInfo;
 import com.example.commoncustomizecore.info.WeChatInfo;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.message.BasicHeader;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
@@ -245,6 +249,14 @@ public class CommonsTest
         LocalDateTime localDateTime = TimeUtils.dateTime2LocalDateTime(now);
         System.out.println(localDateTime);
         System.out.println(TimeUtils.localDateTime2DateTime(localDateTime));
+    }
+
+    @Test
+    public void sendGet()
+    {
+        Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+        String rsp = HttpUtils.sendGet("{\"query\":{\"match\":{\"message\":\"000000\"}}}", "http://localhost:9200", header);
+        System.out.println(rsp);
     }
 
 }
