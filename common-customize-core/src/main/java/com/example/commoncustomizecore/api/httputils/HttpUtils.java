@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -108,7 +107,7 @@ public class HttpUtils
             throw new CommonsCoreException("httpClient: " + e.getMessage());
         }
         HttpGet httpGet = new HttpGet(uri);
-        ;
+        
         httpGet.setConfig(RequestConfig.custom().setNormalizeUri(true).build());
         for (Header header : headers)
         {

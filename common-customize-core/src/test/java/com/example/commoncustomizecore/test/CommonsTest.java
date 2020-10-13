@@ -10,6 +10,7 @@ import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendMiniTempla
 import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.LoginRsp;
 import com.example.commoncustomizecore.api.weChat.miniprogram.service.MiniProgramService;
 import com.example.commoncustomizecore.api.weChat.miniprogram.service.impl.MiniProgramServiceImpl;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInfo;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.GetTokenReq;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendKfTextMessageReq;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendTemplateMessageReq;
@@ -18,6 +19,7 @@ import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.Text
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetTokenRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.OfficialAccountsService;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.impl.OfficialAccountsServiceImpl;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.util.OfficialAccountUtil;
 import com.example.commoncustomizecore.info.MiniTemplateInfo;
 import com.example.commoncustomizecore.info.OfficialAccountsInfo;
 import com.example.commoncustomizecore.info.WeChatInfo;
@@ -251,13 +253,24 @@ public class CommonsTest
         System.out.println(TimeUtils.localDateTime2DateTime(localDateTime));
     }
 
-    @Test
+//    @Test
     public void sendGet()
     {
         Header header = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
-        String rsp = HttpUtils.sendGet("{\"query\":{\"match\":{\"message\":\"000000\"}}}", "http://localhost:9200" +
-                "/filebeat-7.9.0/_search", header);
+        String rsp = HttpUtils.sendPost("{\"query\":{\"match\":{\"message\":\"000000\"}}}", "http://localhost:9200" +
+                "/filebeat-7.9.0/_search");
         System.out.println(rsp);
+    }
+
+    @Test
+    public void testSign()
+    {
+        SignInfo info = new SignInfo();
+        info.setNonce("9446677791");
+        info.setSignature("b6d6bd36b050c92f4e03e2c970f5382d7a0d2c98");
+        info.setTimestamp("1602577957");
+        info.setToken("xhfhugrhh");
+        System.out.println(OfficialAccountUtil.checkSignature(info));;
     }
 
 }
