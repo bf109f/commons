@@ -5,6 +5,9 @@ import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInf
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +37,52 @@ public class OfficialAccountUtil
         }
     }
 
+    /**
+     *  输入流转换成字符串
+     * @param is
+     * @return
+     */
+    public static String inputStream2string(InputStream is)
+    {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try
+        {
+            byte[] data = new byte[10240];
+            int len = 0;
+
+            while ((len = is.read(data)) != -1)
+            {
+                baos.write(data, 0, len);
+            }
+
+            if (baos.size() > 0)
+            {
+                return baos.toString();
+            }
+        } catch (IOException e)
+        {
+            LOG.error(e.getMessage(), e);
+        } finally
+        {
+            try
+            {
+                baos.close();
+                baos.flush();
+                is.close();
+            } catch (IOException e)
+            {
+
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 对参数值进行排序
+     * @param signInfo
+     * @return
+     */
     private static String sort(SignInfo signInfo)
     {
         String [] strArray = {signInfo.getToken(), signInfo.getTimestamp(), signInfo.getNonce()};
@@ -58,7 +107,8 @@ public class OfficialAccountUtil
             for (int i = 0; i < md5Bytes.length; i++)
             {
                 int val = ((int) md5Bytes[i]) & 0xff;
-                if (val < 16) {
+                if (val < 16)
+                {
                     hexValue.append("0");
                 }
                 hexValue.append(Integer.toHexString(val));

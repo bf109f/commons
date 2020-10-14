@@ -1,6 +1,9 @@
 package com.example.commoncustomizecore.api.weChat.officialaccounts.util;
 
+import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.xmlbean.BaseMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,6 +14,8 @@ import java.io.StringWriter;
 
 public class XmlUtil
 {
+    private static final Logger LOG = LoggerFactory.getLogger(XmlUtil.class);
+
     public static String obj2Xml(Object obj)
     {
         // 创建输出流
@@ -28,7 +33,8 @@ public class XmlUtil
             marshaller.marshal(obj, sw);
         } catch (JAXBException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
+            throw new CommonsCoreException(e.getMessage());
         }
         return sw.toString();
     }
@@ -45,7 +51,8 @@ public class XmlUtil
             xmlObject = (T) unmarshaller.unmarshal(sr);
         } catch (JAXBException e)
         {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
+            throw new CommonsCoreException(e.getMessage());
         }
         return xmlObject;
     }
