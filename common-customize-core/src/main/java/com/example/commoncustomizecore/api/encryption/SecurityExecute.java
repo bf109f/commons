@@ -5,10 +5,10 @@ import com.example.commoncustomizecore.api.encryption.factory.SecureFactory;
 import com.example.commoncustomizecore.api.encryption.secure.*;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.utils.AssertUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +20,11 @@ public class SecurityExecute
      * 字符集
      */
     private String charset = "UTF-8";
+
+    public SecurityExecute()
+    {
+
+    }
 
     /**
      *
@@ -39,7 +44,7 @@ public class SecurityExecute
         AssertUtil.isEmpty(content, "编码内容不能为空");
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             MD5Codec codec = (MD5Codec) SecureFactory.getCodec(SecureConstant.MD5, null);
             return codec.getEncryptForHex(data);
         } catch (Exception e)
@@ -58,7 +63,7 @@ public class SecurityExecute
         AssertUtil.isEmpty(content, "编码内容不能为空");
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             SHACodec codec = (SHACodec)SecureFactory.getCodec(SecureConstant.SHA, null);
             return codec.getEncryptForHex(data);
         }
@@ -78,13 +83,13 @@ public class SecurityExecute
         AssertUtil.isEmpty(content, "加密内容不能为空");
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             DESCodec codecA = (DESCodec)SecureFactory.getCodec(SecureConstant.DES, null);
             String secretKey = codecA.getSecretKey();
             byte[] encryptData = codecA.encrypt(data);
             Map<String, String> encryptInfo = new HashMap<>();
             encryptInfo.put("secretKey", secretKey);
-            encryptInfo.put("encryptData", new String(encryptData));
+            encryptInfo.put("encryptData", Base64.getEncoder().encodeToString(encryptData));
             return encryptInfo;
         } catch (Exception e)
         {
@@ -104,10 +109,10 @@ public class SecurityExecute
 
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             DESCodec codecA = (DESCodec)SecureFactory.getCodec(SecureConstant.DES, key);
             byte[] encryptData = codecA.encrypt(data);
-            return new String(encryptData);
+            return Base64.getEncoder().encodeToString(encryptData);
         } catch (Exception e)
         {
             LOG.error(e.getMessage(), e);
@@ -117,6 +122,8 @@ public class SecurityExecute
 
     /**
      * des解密
+     * @param encryptString base64编码的秘文字符串
+     * @param key base64编码的密钥
      * @return
      */
     public String desDecrypt(String encryptString, String key)
@@ -126,7 +133,7 @@ public class SecurityExecute
         try
         {
             DESCodec codecB = (DESCodec)SecureFactory.getCodec(SecureConstant.DES, key);
-            byte[] decryptData = codecB.decrypt(encryptString.getBytes(this.charset));
+            byte[] decryptData = codecB.decrypt(Base64.getDecoder().decode(encryptString));
             return new String(decryptData);
         } catch (Exception e)
         {
@@ -145,12 +152,12 @@ public class SecurityExecute
         AssertUtil.isEmpty(content, "加密内容不能为空");
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             AESCodec codecA = (AESCodec)SecureFactory.getCodec(SecureConstant.AES, null);
             byte[] encryptData = codecA.encrypt(data);
             Map<String, String> encryptInfo = new HashMap<>();
             encryptInfo.put("secretKey", codecA.getSecretKey());
-            encryptInfo.put("encryptData", new String(encryptData));
+            encryptInfo.put("encryptData", Base64.getEncoder().encodeToString(encryptData));
             return encryptInfo;
         } catch (Exception e)
         {
@@ -167,12 +174,13 @@ public class SecurityExecute
     {
         AssertUtil.isBlank(key, "AES加密密钥不能为空");
         AssertUtil.isEmpty(content, "内容不能为空");
+
         try
         {
-            byte[] data = content.getBytes(this.charset);
+            byte[] data = content.getBytes();
             AESCodec codecA = (AESCodec)SecureFactory.getCodec(SecureConstant.AES, key);
             byte[] encryptData = codecA.encrypt(data);
-            return new String(encryptData);
+            return Base64.getEncoder().encodeToString(encryptData);
         } catch (Exception e)
         {
             LOG.error(e.getMessage(), e);
@@ -191,7 +199,7 @@ public class SecurityExecute
         try
         {
             AESCodec codecB = (AESCodec)SecureFactory.getCodec(SecureConstant.AES, key);
-            byte[] decryptData = codecB.decrypt(encryptString.getBytes(this.charset));
+            byte[] decryptData = codecB.decrypt(Base64.getDecoder().decode(encryptString));
             return new String(decryptData);
         } catch (Exception e)
         {
@@ -239,7 +247,7 @@ public class SecurityExecute
         try
         {
             RSAForPublicCodec codecB = (RSAForPublicCodec)SecureFactory.getCodec(SecureConstant.RSA_PUBLIC, publicKey);
-            return codecB.verifySign(content.getBytes(StringUtils.isBlank(charset)? "UTF-8" : charset), sign);
+            return codecB.verifySign(content.getBytes(), sign);
         } catch (Exception e)
         {
             LOG.error(e.getMessage(), e);
@@ -261,7 +269,7 @@ public class SecurityExecute
         {
             RSAForPublicCodec codecB = (RSAForPublicCodec)SecureFactory.getCodec(SecureConstant.RSA_PUBLIC, publicKey);
             byte [] encryptData = codecB.encrypt(content.getBytes(charset));
-            return new String(encryptData);
+            return Base64.getEncoder().encodeToString(encryptData);
         } catch (Exception e)
         {
             LOG.error(e.getMessage(), e);
@@ -282,8 +290,8 @@ public class SecurityExecute
         try
         {
             RSAForPrivateCodec codecA = (RSAForPrivateCodec)SecureFactory.getCodec(SecureConstant.RSA_PRIVATE, privateKey);
-            byte [] encryptData = codecA.encrypt(content.getBytes(charset));
-            return new String(encryptData);
+            byte [] encryptData = codecA.encrypt(content.getBytes());
+            return Base64.getEncoder().encodeToString(encryptData);
         } catch (Exception e)
         {
             LOG.error(e.getMessage(), e);
@@ -334,4 +342,6 @@ public class SecurityExecute
             throw new CommonsCoreException("rsa解密失败");
         }
     }
+
+
 }

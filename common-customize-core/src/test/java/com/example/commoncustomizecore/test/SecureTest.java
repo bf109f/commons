@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class SecureTest
 {
-	private static final String inputStr = "Super Bayern Super Bayern";
+	private static final String inputStr = "川建国输啦";
 	
 	@Test
 	public void md5Test()

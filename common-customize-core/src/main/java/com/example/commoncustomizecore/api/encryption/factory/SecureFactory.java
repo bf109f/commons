@@ -42,7 +42,7 @@ public class SecureFactory
 				}
 				break;
 			case RSA_PRIVATE:
-				codec = new RSAForPrivateCodec();
+				codec = new RSAForPrivateCodec(key);
 				break;
 			case RSA_PUBLIC:
 				codec = new RSAForPublicCodec(key);

@@ -132,6 +132,12 @@
 			<version>2.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.15</version>
+		</dependency>
+
 		<!-- 时间处理 -->
 		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
 		<dependency>

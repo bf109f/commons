@@ -1,5 +1,7 @@
 package com.example.commoncustomizecore.api.encryption.secure;
 
+import org.apache.commons.codec.binary.Base64;
+
 import javax.crypto.Cipher;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -15,7 +17,7 @@ public class RSAForPublicCodec extends BasicCodec
 {
 
 	private static final String ALGORITHM = "RSA";
-	private static final String SIGN_ALGORITHM = "MD5withRSA";
+	private static final String SIGN_ALGORITHM = "SHA1withRSA";
 	
 	public RSAForPublicCodec(String publicKey)
 	{
@@ -53,7 +55,7 @@ public class RSAForPublicCodec extends BasicCodec
 	
 	private PublicKey getRSAPublicKey(String key) throws Exception
 	{
-		X509EncodedKeySpec x509EncoderKeySpec = new X509EncodedKeySpec(decoder(key));
+		X509EncodedKeySpec x509EncoderKeySpec = new X509EncodedKeySpec(Base64.decodeBase64(key));
 		KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 		return keyFactory.generatePublic(x509EncoderKeySpec);
 	}
@@ -76,7 +78,7 @@ public class RSAForPublicCodec extends BasicCodec
 		Signature signature = Signature.getInstance(SIGN_ALGORITHM);
 		signature.initVerify(rsaPublicKey);
 		signature.update(data);
-		return signature.verify(decoder(sign));
+		return signature.verify(Base64.decodeBase64(sign));
 	}
 
 }
