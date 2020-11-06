@@ -1,6 +1,7 @@
 package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.encryption.SecurityExecute;
+import com.example.commoncustomizecore.api.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -75,6 +76,10 @@ public class SecurityExecuteTest
         }
     }
 
+    /**
+     * 公钥加密
+     * 私钥解密
+     */
     @Test
     public void testRsaSecret()
     {
@@ -91,6 +96,33 @@ public class SecurityExecuteTest
             String publicKey = FileUtils.readFileToString(new File(url1.getFile()), "UTF-8");
             publicKey = publicKey.split("-----")[2].replace("\t\n", "");
             System.out.println(execute.rsaDecryptByPrivate(encrypt, publicKey));
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 私钥加密
+     * 公钥解密
+     */
+    @Test
+    public void testRsaSecret2()
+    {
+        try
+        {
+            SecurityExecute execute = new SecurityExecute();
+            URL url = SecurityExecuteTest.class.getClassLoader().getResource("rsa_private.pem");
+            String privateKey = FileUtils.readFileToString(new File(url.getFile()), "UTF-8");
+            privateKey = privateKey.split("-----")[2].replace("\t\n", "");
+            String encrypt = execute.rsaEncryptByPrivate(str, privateKey);
+            System.out.println(encrypt);
+            System.out.println("========解密==========");
+            /*URL url1 = SecurityExecuteTest.class.getClassLoader().getResource("");
+            String publicKey = FileUtils.readFileToString(new File(url1.getFile()), "UTF-8");
+            publicKey = publicKey.split("-----")[2].replace("\t\n", "");*/
+            String publicKey = FileUtil.getRsaKey("rsa_public.pem");
+            System.out.println(execute.rsaDecryptByPublic(encrypt, publicKey));
         } catch (IOException e)
         {
             e.printStackTrace();

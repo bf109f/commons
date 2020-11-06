@@ -3,6 +3,7 @@ package com.example.commoncustomizecore.api.encryption.secure;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
+import java.io.ByteArrayOutputStream;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 
@@ -14,6 +15,12 @@ import java.security.spec.PKCS8EncodedKeySpec;
 public class RSAForPrivateCodec extends BasicCodec
 {
 	private static final String ALGORITHM = "RSA";
+
+
+	/**
+	 * RSA最大解密密文大小
+	 */
+	private static final int    MAX_DECRYPT_BLOCK   = 128;
 	
 	//rsa，签名算法可以是 md5withrsa 、 sha1withrsa 、 sha256withrsa 、 sha384withrsa 、 sha512withrsa
 //	private static final String SIGN_ALGORITHM = "MD5withRSA";
@@ -38,12 +45,37 @@ public class RSAForPrivateCodec extends BasicCodec
 	@Override
 	public byte[] decrypt(byte[] data) throws Exception 
 	{
-		PrivateKey rsaPrivateKey = getRSAPrivateKey();
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
+
+//		PrivateKey rsaPrivateKey = getRSAPrivateKey();
+//		Cipher cipher = Cipher.getInstance(ALGORITHM);
+
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(super.privateKey));
+		KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+		PrivateKey rsaPrivateKey = keyFactory.generatePrivate(pkcs8KeySpec);
+		Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
 		cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKey);
-		return cipher.doFinal(data);
+		int inputLen = data.length;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int offSet = 0;
+		byte[] cache;
+		int i = 0;
+		// 对数据分段解密
+		while (inputLen - offSet > 0) {
+			if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
+				cache = cipher.doFinal(data, offSet, MAX_DECRYPT_BLOCK);
+			} else {
+				cache = cipher.doFinal(data, offSet, inputLen - offSet);
+			}
+			out.write(cache, 0, cache.length);
+			i++;
+			offSet = i * MAX_DECRYPT_BLOCK;
+		}
+		byte[] decryptedData = out.toByteArray();
+		out.close();
+		return decryptedData;
 	}
-	
+
+
 	/**
 	 * 初始化私钥和公钥
 	 * @throws NoSuchAlgorithmException

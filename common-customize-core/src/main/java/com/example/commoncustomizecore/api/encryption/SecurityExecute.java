@@ -268,7 +268,7 @@ public class SecurityExecute
         try
         {
             RSAForPublicCodec codecB = (RSAForPublicCodec)SecureFactory.getCodec(SecureConstant.RSA_PUBLIC, publicKey);
-            byte [] encryptData = codecB.encrypt(content.getBytes(charset));
+            byte [] encryptData = codecB.encrypt(content.getBytes());
             return Base64.getEncoder().encodeToString(encryptData);
         } catch (Exception e)
         {
@@ -312,7 +312,7 @@ public class SecurityExecute
         try
         {
             RSAForPublicCodec codecB = (RSAForPublicCodec)SecureFactory.getCodec(SecureConstant.RSA_PUBLIC, publicKey);
-            byte [] encryptData = codecB.decrypt(encryptString.getBytes(charset));
+            byte [] encryptData = codecB.decrypt(Base64.getDecoder().decode(encryptString));
             return new String(encryptData);
         } catch (Exception e)
         {
@@ -334,7 +334,7 @@ public class SecurityExecute
         try
         {
             RSAForPrivateCodec codecA = (RSAForPrivateCodec)SecureFactory.getCodec(SecureConstant.RSA_PRIVATE, privateKey);
-            byte [] encryptData = codecA.decrypt(encryptString.getBytes(charset));
+            byte [] encryptData = codecA.decrypt(Base64.getDecoder().decode(encryptString));
             return new String(encryptData);
         } catch (Exception e)
         {
