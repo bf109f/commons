@@ -20,6 +20,12 @@ public class RSAForPublicCodec extends BasicCodec
 
 	private static final String ALGORITHM = "RSA";
 	private static final String SIGN_ALGORITHM = "SHA1withRSA";
+
+	/**
+	 * RSA最大加密明文大小
+	 */
+	private static final int    MAX_ENCRYPT_BLOCK   = 117;
+
 	/**
 	 * RSA最大解密密文大小
 	 */
@@ -39,10 +45,36 @@ public class RSAForPublicCodec extends BasicCodec
 			throw new Exception("publicKey is need exists");
 		}
 		
-		PublicKey rsaPublicKey = getRSAPublicKey(publicKey);
+		/*PublicKey rsaPublicKey = getRSAPublicKey(publicKey);
 		Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, rsaPublicKey);
-		return cipher.doFinal(data);
+		return cipher.doFinal(data);*/
+		byte[] keyBytes = Base64.decodeBase64(publicKey);
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
+		KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+		Key publicK = keyFactory.generatePublic(x509KeySpec);
+		// 对数据加密
+		Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+		cipher.init(Cipher.ENCRYPT_MODE, publicK);
+		int inputLen = data.length;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		int offSet = 0;
+		byte[] cache;
+		int i = 0;
+		// 对数据分段加密
+		while (inputLen - offSet > 0) {
+			if (inputLen - offSet > MAX_ENCRYPT_BLOCK) {
+				cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);
+			} else {
+				cache = cipher.doFinal(data, offSet, inputLen - offSet);
+			}
+			out.write(cache, 0, cache.length);
+			i++;
+			offSet = i * MAX_ENCRYPT_BLOCK;
+		}
+		byte[] encryptedData = out.toByteArray();
+		out.close();
+		return encryptedData;
 	}
 
 	@Override
