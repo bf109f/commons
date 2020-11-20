@@ -1,6 +1,10 @@
 package com.example.commoncustomizecore.api.commons;
 
-import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommonCoreUtils
 {
@@ -9,4 +13,47 @@ public class CommonCoreUtils
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    /**
+     * 获取参数校验信息
+     * @param validationMessage ValidationException 返回信息
+     * @return
+     */
+    public static String getValidationMessage(String validationMessage)
+    {
+        if (StringUtils.isBlank(validationMessage))
+        {
+            return "参数校验失败";
+        }
+        String reg = "\\{(.*?)\\}";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(validationMessage);
+        List<Map<String, String>> maps = new ArrayList<>();
+        while (matcher.find())
+        {
+            String str = matcher.group(1);
+            if (StringUtils.isNotBlank(str) && str.contains(",") && str.contains("="))
+            {
+                String [] keyValues = str.split(",");
+                Map<String, String> map = new HashMap<>();
+                for (String keyValue : keyValues)
+                {
+                    String [] keys = keyValue.split("=");
+                    map.put(keys[0].trim(), keys[1]);
+                }
+                maps.add(map);
+            }
+        }
+        StringJoiner messages = new StringJoiner(",", "[", "]");
+        if (maps.size() > 0)
+        {
+            for (Map<String, String> map : maps)
+            {
+                messages.add(map.get("messageTemplate"));
+            }
+        } else
+        {
+            messages.add("参数校验失败");
+        }
+        return messages.toString();
+    }
 }
