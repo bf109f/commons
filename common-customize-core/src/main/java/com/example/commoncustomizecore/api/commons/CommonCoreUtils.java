@@ -56,4 +56,25 @@ public class CommonCoreUtils
         }
         return messages.toString();
     }
+
+    /**
+     * IdWorker 单例防止出现重复
+     * @Title: getSnowflakeId
+     * @Description: TODO(根据雪花算法计算id)
+     * @return    参数
+     * @return String    返回类型
+     */
+    public static String getSnowflakeId(String prefix)
+    {
+        IdWorker idWorker = IdWorker.getInstance();
+        long id = idWorker.nextId();
+        return prefix + String.valueOf(id);
+    }
+
+    public static String getSnowflakeId()
+    {
+        IdWorker idWorker = IdWorker.getInstance();
+        long id = idWorker.nextId();
+        return String.valueOf(id);
+    }
 }
