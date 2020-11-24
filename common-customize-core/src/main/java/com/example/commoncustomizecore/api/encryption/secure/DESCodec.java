@@ -1,5 +1,9 @@
 package com.example.commoncustomizecore.api.encryption.secure;
 
+import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
+import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import org.apache.commons.codec.binary.Base64;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -88,6 +92,15 @@ public class DESCodec extends BasicCodec
 	 */
 	private SecretKey getKey(String key) throws Exception
 	{
+		if (!CommonCoreUtils.isBase64(key))
+		{
+			throw new CommonsCoreException("key需要base64编码");
+		}
+		byte [] decodeKey = Base64.decodeBase64(key);
+		if (decodeKey.length < 8)
+		{
+			throw new CommonsCoreException("des密钥字节长度小于8，传入长度为[" + decodeKey.length + "]");
+		}
 		DESKeySpec desKeySpec = new DESKeySpec(decoder(key));
 		SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ALGORITHM);
 		return secretKeyFactory.generateSecret(desKeySpec);

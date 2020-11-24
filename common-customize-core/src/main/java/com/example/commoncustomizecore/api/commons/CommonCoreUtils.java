@@ -1,5 +1,6 @@
 package com.example.commoncustomizecore.api.commons;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -76,5 +77,21 @@ public class CommonCoreUtils
         IdWorker idWorker = IdWorker.getInstance();
         long id = idWorker.nextId();
         return String.valueOf(id);
+    }
+
+    /**
+     * 判断字符串是否被base64编码
+     * @param str
+     * @return
+     */
+    public static boolean isBase64(String str)
+    {
+        if (StringUtils.isBlank(str))
+        {
+            return true;
+        }
+        String decrypt = new String(Base64.decodeBase64(str));
+        String base64 = Base64.encodeBase64String(decrypt.getBytes());
+        return str.equals(base64);
     }
 }

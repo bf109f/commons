@@ -1,5 +1,6 @@
 package com.example.commoncustomizecore.test;
 
+import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.encryption.SecurityExecute;
 import com.example.commoncustomizecore.api.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
@@ -15,13 +16,24 @@ public class SecurityExecuteTest
 {
     private static String str = "川建国没戏了ssss";
 
-    private static String key = "0123456123456121";
+    private static String key = "01286700";
+
+    @Test
+    public void isBase64()
+    {
+        String str = "YWNzZGVzbWl5YW8=";
+        String decrypt = new String(Base64.getDecoder().decode(str.getBytes()));
+        String base64 = Base64.getEncoder().encodeToString(decrypt.getBytes());
+        System.out.println(base64.equals(str));
+        System.out.println(CommonCoreUtils.isBase64(str));
+    }
 
     @Test
     public void testDes()
     {
+        System.out.println(key.length());
         SecurityExecute execute = new SecurityExecute();
-        String encrypt = execute.desEncrypt(str, Base64.getEncoder().encodeToString(key.getBytes()));
+        String encrypt = execute.desEncrypt(str, key);
         System.out.println(encrypt);
         String decrypt = execute.desDecrypt(encrypt, Base64.getEncoder().encodeToString(key.getBytes()));
         System.out.println(decrypt);
