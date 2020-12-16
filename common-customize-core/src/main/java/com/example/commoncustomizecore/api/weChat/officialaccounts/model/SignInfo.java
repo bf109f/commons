@@ -4,12 +4,15 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 公众号验签对象
  */
 @Data
-public class SignInfo
+public class SignInfo implements Serializable
 {
+    private static final long serialVersionUID = 7507607496665602025L;
     /**
      * token
      */

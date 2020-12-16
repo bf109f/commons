@@ -2,13 +2,18 @@ package com.example.commoncustomizecore.api.commons;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonCoreUtils
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonCoreUtils.class);
+
     public static String getUUID()
     {
         return UUID.randomUUID().toString().replaceAll("-", "");
@@ -93,5 +98,150 @@ public class CommonCoreUtils
         String decrypt = new String(Base64.decodeBase64(str));
         String base64 = Base64.encodeBase64String(decrypt.getBytes());
         return str.equals(base64);
+    }
+
+    /**
+     * 对象序列化成字符串
+     * @param obj
+     * @return
+     */
+    public static String serialize2string(Object obj)
+    {
+        ObjectOutputStream oos = null;
+        ByteArrayOutputStream baos = null;
+        try
+        {
+            //序列化
+            baos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(obj);
+            return Base64.encodeBase64String(baos.toByteArray());
+        } catch (IOException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        } finally
+        {
+            close(oos, baos);
+        }
+    }
+
+    /**
+     * 对象序列话为字节
+     * @param obj
+     * @return
+     */
+    public static byte [] serialize2array(Object obj)
+    {
+        ObjectOutputStream oos = null;
+        ByteArrayOutputStream baos = null;
+        try
+        {
+            //序列化
+            baos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(obj);
+            return baos.toByteArray();
+        } catch (IOException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        } finally
+        {
+            close(oos, baos);
+        }
+    }
+
+    public static Object unSerialize(byte[] bytes)
+    {
+        ByteArrayInputStream bais = null;
+        ObjectInputStream ois = null;
+        try
+        {
+            //反序列化
+            bais = new ByteArrayInputStream(bytes);
+            ois = new ObjectInputStream(bais);
+            return ois.readObject();
+        } catch (IOException | ClassNotFoundException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        } finally
+        {
+            close(ois, bais);
+        }
+    }
+
+    /**
+     * 序列化成对象
+     * @param base64String
+     * @return
+     */
+    public static Object unSerialize(String base64String)
+    {
+        ByteArrayInputStream bais = null;
+        ObjectInputStream ois = null;
+        try
+        {
+            //反序列化
+            bais = new ByteArrayInputStream(Base64.decodeBase64(base64String));
+            ois = new ObjectInputStream(bais);
+            return ois.readObject();
+        } catch (IOException | ClassNotFoundException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        } finally
+        {
+            close(ois, bais);
+        }
+    }
+
+    private static void close(ObjectInputStream ois, ByteArrayInputStream bais)
+    {
+        if (ois != null)
+        {
+            try
+            {
+                ois.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        if (bais != null)
+        {
+            try
+            {
+                bais.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void close(ObjectOutputStream oos, ByteArrayOutputStream baos)
+    {
+        if (oos != null)
+        {
+            try
+            {
+                oos.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        if (baos != null)
+        {
+            try
+            {
+                baos.close();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 }
