@@ -2,6 +2,7 @@ package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.encryption.SecurityExecute;
+import com.example.commoncustomizecore.api.encryption.security.Sha;
 import com.example.commoncustomizecore.api.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -112,6 +113,12 @@ public class SecurityExecuteTest
         {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testSHA()
+    {
+        Sha sha = new Sha("","");
     }
 
     /**
