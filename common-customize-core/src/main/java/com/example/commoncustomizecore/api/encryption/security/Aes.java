@@ -44,7 +44,7 @@ public class Aes extends SymmetricEncryption
             SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.decodeBase64(key), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-            return Base64.encodeBase64String(cipher.doFinal(content.getBytes()));
+            return new String(cipher.doFinal(Base64.decodeBase64(content)));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
                 | BadPaddingException e)
         {
@@ -55,7 +55,7 @@ public class Aes extends SymmetricEncryption
     }
 
     @Override
-    public String encrypt(String content)
+    public String encrypt(String content, String charset)
     {
         try
         {

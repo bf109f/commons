@@ -2,6 +2,7 @@ package com.example.commoncustomizecore.api.encryption.security;
 
 import com.example.commoncustomizecore.api.encryption.security.base.AsymmetricEncryption;
 
+import javax.crypto.Cipher;
 import java.io.File;
 
 /**
@@ -22,12 +23,12 @@ public class RsaReverse extends AsymmetricEncryption
     @Override
     public String decrypt(String content)
     {
-        return null;
+        return dealRsaCipher(publicKey, Cipher.DECRYPT_MODE, MAX_DECRYPT_BLOCK, content.getBytes());
     }
 
     @Override
-    public String encrypt(String content)
+    public String encrypt(String content, String charset)
     {
-        return null;
+        return dealRsaCipher(privateKey, Cipher.ENCRYPT_MODE, MAX_ENCRYPT_BLOCK, content.getBytes());
     }
 }

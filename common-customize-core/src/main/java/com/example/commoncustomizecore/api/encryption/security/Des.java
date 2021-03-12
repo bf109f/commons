@@ -38,7 +38,7 @@ public class Des extends SymmetricEncryption
             SecretKey mesKey = getKey(key);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, mesKey);
-            return Base64.encodeBase64String(cipher.doFinal(content.getBytes()));
+            return new String(cipher.doFinal(Base64.decodeBase64(content)));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
                 | BadPaddingException e)
         {
@@ -48,7 +48,7 @@ public class Des extends SymmetricEncryption
     }
 
     @Override
-    public String encrypt(String content)
+    public String encrypt(String content, String charset)
     {
         try
         {

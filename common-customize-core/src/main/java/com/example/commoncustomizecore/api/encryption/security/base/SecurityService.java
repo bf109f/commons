@@ -7,5 +7,5 @@ public interface SecurityService
      * @param content
      * @return
      */
-    String encrypt(String content);
+    String encrypt(String content, String charset);
 }

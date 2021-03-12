@@ -12,6 +12,10 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @see com.example.commoncustomizecore.api.encryption.security
+ */
+@Deprecated
 public class SecurityExecute
 {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityExecute.class);

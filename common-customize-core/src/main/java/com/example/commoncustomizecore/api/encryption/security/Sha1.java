@@ -5,28 +5,28 @@ import com.example.commoncustomizecore.api.encryption.security.base.SingleEncryp
 /**
  * SHA 方式加密
  */
-public class Sha extends SingleEncryption
+public class Sha1 extends SingleEncryption
 {
     private static final String ALGORITHM = "SHA";
 
-    public Sha()
+    public Sha1()
     {
 
     }
 
-    public Sha(String prefix)
+    public Sha1(String prefix)
     {
         super(prefix);
     }
 
-    public Sha(String prefix, String suffix)
+    public Sha1(String prefix, String suffix)
     {
         super(prefix, suffix);
     }
 
     @Override
-    public String encrypt(String content)
+    public String encrypt(String content, String charset)
     {
-        return encrypt(content, ALGORITHM);
+        return encrypt(content, ALGORITHM, charset);
     }
 }

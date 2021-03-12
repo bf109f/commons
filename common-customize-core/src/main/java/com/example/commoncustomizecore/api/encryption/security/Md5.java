@@ -25,8 +25,9 @@ public class Md5 extends SingleEncryption
     }
 
     @Override
-    public String encrypt(String content)
+    public String encrypt(String content, String charset)
     {
-        return encrypt(content, ALGORITHM);
+
+        return encrypt(content, ALGORITHM, charset);
     }
 }

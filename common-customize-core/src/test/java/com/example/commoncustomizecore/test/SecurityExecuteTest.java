@@ -2,7 +2,9 @@ package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.encryption.SecurityExecute;
-import com.example.commoncustomizecore.api.encryption.security.Sha;
+import com.example.commoncustomizecore.api.encryption.security.Aes;
+import com.example.commoncustomizecore.api.encryption.security.Md5;
+import com.example.commoncustomizecore.api.encryption.security.Sha1;
 import com.example.commoncustomizecore.api.utils.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -118,7 +120,24 @@ public class SecurityExecuteTest
     @Test
     public void testSHA()
     {
-        Sha sha = new Sha("","");
+        Sha1 sha1 = new Sha1("a","a");
+        System.out.println(sha1.encrypt("普通转账交s易", ""));
+    }
+
+    @Test
+    public void testMd5()
+    {
+        Md5 md5 = new Md5("a", "a");
+        System.out.println(md5.encrypt("普通转账交s易", ""));
+    }
+
+    @Test
+    public void testAes1()
+    {
+        Aes aes = new Aes("MTIzNDU2Nzg5MDEyMzQ1Ng==");
+        String encrypt = aes.encrypt("a普通转账交s易a", "");
+        System.out.println(encrypt);
+        System.out.println(aes.decrypt(encrypt));
     }
 
     /**

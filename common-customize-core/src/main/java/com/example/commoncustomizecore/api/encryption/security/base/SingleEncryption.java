@@ -1,9 +1,11 @@
 package com.example.commoncustomizecore.api.encryption.security.base;
 
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -67,13 +69,15 @@ public abstract class SingleEncryption implements SecurityService
         return hex.toString();
     }
 
-    protected String encrypt(String content, String model)
+    protected String encrypt(String content, String model, String charset)
     {
         try
         {
+            if (StringUtils.isBlank(charset))
+                charset = "utf-8";
             MessageDigest messageDigest = MessageDigest.getInstance(model);
-            return parseByteArray2HexStr(messageDigest.digest((prefix + content + suffix).getBytes()));
-        } catch (NoSuchAlgorithmException e)
+            return parseByteArray2HexStr(messageDigest.digest((prefix + content + suffix).getBytes(charset)));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e)
         {
             LOGGER.error(e.getMessage(), e);
             throw new CommonsCoreException(model + "编码失败");
