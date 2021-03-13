@@ -79,6 +79,11 @@ public abstract class AsymmetricEncryption extends DoubleEncryption
         try
         {
             String key = FileUtils.readFileToString(file, "UTF-8");
+            if (!key.contains("-----"))
+            {
+                throw new CommonsCoreException("key格式应为：-----BEGIN PRIVATE KEY-----\r\n-----END PRIVATE " +
+                        "KEY-----\r\nor-----BEGIN PUBLIC KEY-----\r\n-----END PUBLIC KEY-----");
+            }
             return key.split("-----")[2].replace("\t\n", "");
         } catch (IOException e)
         {
@@ -96,6 +101,10 @@ public abstract class AsymmetricEncryption extends DoubleEncryption
     {
         try
         {
+            if (!keyContent.contains("-----"))
+            {
+                return keyContent;
+            }
             return keyContent.split("-----")[2].replace("\t\n", "");
         } catch (Exception e)
         {
@@ -139,7 +148,7 @@ public abstract class AsymmetricEncryption extends DoubleEncryption
      * @param data
      * @return
      */
-    protected String dealRsaCipher(Key key, int opmode, int maxBlock, byte [] data)
+    protected byte [] dealRsaCipher(Key key, int opmode, int maxBlock, byte [] data)
     {
         ByteArrayOutputStream out = null;
         try
@@ -165,9 +174,7 @@ public abstract class AsymmetricEncryption extends DoubleEncryption
                 i++;
                 offSet = i * maxBlock;
             }
-            byte[] encryptedData = out.toByteArray();
-
-            return Base64.encodeBase64String(encryptedData);
+            return out.toByteArray();
         } catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException | NoSuchAlgorithmException
                 | NoSuchPaddingException e)
         {

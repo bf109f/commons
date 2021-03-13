@@ -2,16 +2,17 @@ package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.encryption.SecurityExecute;
-import com.example.commoncustomizecore.api.encryption.security.Aes;
-import com.example.commoncustomizecore.api.encryption.security.Md5;
-import com.example.commoncustomizecore.api.encryption.security.Sha1;
+import com.example.commoncustomizecore.api.encryption.security.*;
 import com.example.commoncustomizecore.api.utils.FileUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class SecurityExecuteTest
 
     private static String key = "01286700";
 
-    @Test
+//    @Test
     public void isBase64()
     {
         String str = "YWNzZGVzbWl5YW8=";
@@ -31,7 +32,7 @@ public class SecurityExecuteTest
         System.out.println(CommonCoreUtils.isBase64(str));
     }
 
-    @Test
+//    @Test
     public void testDes()
     {
         System.out.println(key.length());
@@ -43,7 +44,8 @@ public class SecurityExecuteTest
 
         Map<String, String> map = execute.desEncrypt(str);
 
-        map.forEach((key, value) -> {
+        map.forEach((key, value) ->
+        {
             System.out.println(key + ":" + value);
 
         });
@@ -51,7 +53,7 @@ public class SecurityExecuteTest
         System.out.println(noKey);
     }
 
-    @Test
+//    @Test
     public void testAes()
     {
         SecurityExecute execute = new SecurityExecute();
@@ -61,13 +63,14 @@ public class SecurityExecuteTest
         System.out.println(execute.aesDecrypt(encrypt, Base64.getEncoder().encodeToString(key.getBytes())));
 
         Map map = execute.aesEncrypt(str);
-        map.forEach((key, value) -> {
+        map.forEach((key, value) ->
+        {
             System.out.println(key + ":" + value);
         });
         System.out.println(execute.aesDecrypt("4PFiAD09Wt9NTN04mp02la+alPWyZ5n+7obtqFSNNXo=", "BuJkx+rNbh3OkmEkQEM3qg=="));
     }
 
-    @Test
+//    @Test
     public void testRsaSign()
     {
         SecurityExecute execute = new SecurityExecute();
@@ -95,7 +98,7 @@ public class SecurityExecuteTest
      * 公钥加密
      * 私钥解密
      */
-    @Test
+//    @Test
     public void testRsaSecret()
     {
         try
@@ -120,8 +123,46 @@ public class SecurityExecuteTest
     @Test
     public void testSHA()
     {
-        Sha1 sha1 = new Sha1("a","a");
-        System.out.println(sha1.encrypt("普通转账交s易", ""));
+        Md5 md5 = new Md5("redis", "key");
+
+        Sha1 sha = new Sha1();
+        String mdsString = md5.encrypt("shfuyeg7837hdh", "");
+        System.out.println(mdsString);
+        System.out.println(sha.encrypt(mdsString, ""));
+        System.out.println("====================");
+        Sha1 sha1 = new Sha1("a", "a");
+        System.out.println(sha1.encrypt("普通转账交s易sssssssssssssssss", ""));
+    }
+
+    @Test
+    public void testSha() throws UnsupportedEncodingException
+    {
+        Sha1 sha = new Sha1();
+        System.out.println(sha.encrypt("2c7d7966dfead856ea5f748b186144ea97dfd756", ""));
+        System.out.println(DigestUtils.sha1Hex("2c7d7966dfead856ea5f748b186144ea97dfd756".getBytes()));
+
+
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+
+        }
+
+        byte[] byteArray = "2c7d7966dfead856ea5f748b186144ea97dfd756".getBytes("UTF-8");
+        byte[] md5Bytes = md.digest(byteArray);
+        StringBuffer hexValue = new StringBuffer();
+        for (int i = 0; i < md5Bytes.length; i++) {
+            int val = ((int) md5Bytes[i]) & 0xff;
+            if (val < 16) {
+                hexValue.append("0");
+            }
+            hexValue.append(Integer.toHexString(val));
+        }
+        System.out.println(hexValue.toString());
+
     }
 
     @Test
@@ -140,11 +181,53 @@ public class SecurityExecuteTest
         System.out.println(aes.decrypt(encrypt));
     }
 
+    @Test
+    public void testDes1()
+    {
+        Des des = new Des("MTIzNDU2Nzg=");
+        String encrypt = des.encrypt("a普通转账交s易a", "");
+        System.out.println(encrypt);
+        System.out.println(des.decrypt(encrypt));
+    }
+
+    @Test
+    public void testRsaP()
+    {
+        URL publicUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_public.pem");
+        URL privateUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_private.pem");
+        RsaPositive positive = new RsaPositive(new File(privateUrl.getFile()), new File(publicUrl.getFile()));
+        String encrypt = positive.encrypt("a普通转账交s易a", "");
+        System.out.println(encrypt);
+        System.out.println(positive.decrypt(encrypt));
+    }
+
+    @Test
+    public void testRsaR()
+    {
+        URL publicUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_public.pem");
+        URL privateUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_private.pem");
+        RsaReverse rsaReverse = new RsaReverse(new File(privateUrl.getFile()), new File(publicUrl.getFile()));
+        String encrypt = rsaReverse.encrypt("a普通转账交s易a", "");
+        System.out.println(encrypt);
+        System.out.println(rsaReverse.decrypt(encrypt));
+    }
+
+    @Test
+    public void testSign()
+    {
+        URL publicUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_public.pem");
+        URL privateUrl = SecurityExecuteTest.class.getClassLoader().getResource("rsa_private.pem");
+        RsaSign rsaSign = new RsaSign(new File(privateUrl.getFile()), new File(publicUrl.getFile()));
+        String sign = rsaSign.encrypt("a普通转账交s易a", "");
+        System.out.println(sign);
+        System.out.println(rsaSign.verify("a普通转账交s易a", sign));
+    }
+
     /**
      * 私钥加密
      * 公钥解密
      */
-    @Test
+//    @Test
     public void testRsaSecret2()
     {
         try

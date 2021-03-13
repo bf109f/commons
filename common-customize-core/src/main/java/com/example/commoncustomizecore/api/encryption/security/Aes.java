@@ -41,7 +41,7 @@ public class Aes extends SymmetricEncryption
         try
         {
             checkKey(key);
-            SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.decodeBase64(key), ALGORITHM);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getKeyByte(key), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
             return new String(cipher.doFinal(Base64.decodeBase64(content)));
@@ -60,7 +60,7 @@ public class Aes extends SymmetricEncryption
         try
         {
             checkKey(key);
-            SecretKeySpec secretKeySpec = new SecretKeySpec(Base64.decodeBase64(key), ALGORITHM);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getKeyByte(key), ALGORITHM);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
             return Base64.encodeBase64String(cipher.doFinal(content.getBytes()));
@@ -70,6 +70,16 @@ public class Aes extends SymmetricEncryption
             LOGGER.error(e.getMessage(), e);
             throw new CommonsCoreException("AES加密失败");
         }
+    }
+
+    private byte [] getKeyByte(String key)
+    {
+        byte [] keys = Base64.decodeBase64(key);
+        if (keys.length != 16 && keys.length != 32)
+        {
+            throw new CommonsCoreException("AES key必须是16或32位");
+        }
+        return keys;
     }
 
     /*private void initKey()

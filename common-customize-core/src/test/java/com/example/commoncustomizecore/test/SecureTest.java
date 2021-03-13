@@ -3,14 +3,13 @@ package com.example.commoncustomizecore.test;
 import com.example.commoncustomizecore.api.constants.SecureConstant;
 import com.example.commoncustomizecore.api.encryption.factory.SecureFactory;
 import com.example.commoncustomizecore.api.encryption.secure.*;
-import org.junit.Test;
 
 
 public class SecureTest
 {
 	private static final String inputStr = "川建国输啦";
 	
-	@Test
+//	@Test
 	public void md5Test()
 	{
 		System.out.println("======= MD5 ========");
@@ -26,7 +25,7 @@ public class SecureTest
 		}
 	}
 	
-	@Test
+//	@Test
 	public void shaTest()
 	{
 		System.out.println("======== SHA ========");
@@ -42,7 +41,7 @@ public class SecureTest
 		}
 	}
 	
-	@Test
+//	@Test
 	public void desTest()
 	{
 		System.out.println("========= DES ========");
@@ -62,7 +61,7 @@ public class SecureTest
 		}
 	}
 	
-	@Test
+//	@Test
 	public void aesTest()
 	{
 		System.out.println("=========== AES ===========");
@@ -86,7 +85,7 @@ public class SecureTest
 		}
 	}
 	
-	@Test
+//	@Test
 	public void rsaTest()
 	{
 		System.out.println("=========== RSA ============");

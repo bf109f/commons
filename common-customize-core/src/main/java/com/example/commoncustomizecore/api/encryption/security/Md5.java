@@ -4,6 +4,7 @@ import com.example.commoncustomizecore.api.encryption.security.base.SingleEncryp
 
 /**
  * md5 方式加密
+ * @see org.apache.commons.codec.digest.DigestUtils#md5Hex(String) 
  */
 public class Md5 extends SingleEncryption
 {

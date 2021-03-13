@@ -73,9 +73,9 @@ public class Des extends SymmetricEncryption
     {
         checkKey(key);
         byte [] decodeKey = Base64.decodeBase64(key);
-        if (decodeKey.length < 8)
+        if (decodeKey.length != 8)
         {
-            throw new CommonsCoreException("des密钥字节长度小于8，传入长度为[" + decodeKey.length + "]");
+            throw new CommonsCoreException("des密钥字节长度应为8，传入长度为[" + decodeKey.length + "]");
         }
         try
         {

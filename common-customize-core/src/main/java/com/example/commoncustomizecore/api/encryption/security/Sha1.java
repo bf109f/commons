@@ -4,6 +4,7 @@ import com.example.commoncustomizecore.api.encryption.security.base.SingleEncryp
 
 /**
  * SHA 方式加密
+ * @see org.apache.commons.codec.digest.DigestUtils#sha1Hex(String)
  */
 public class Sha1 extends SingleEncryption
 {

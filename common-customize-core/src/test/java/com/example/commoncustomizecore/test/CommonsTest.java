@@ -9,20 +9,16 @@ import com.example.commoncustomizecore.api.weChat.miniprogram.req.LoginReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.req.SendMiniTemplateMessageReq;
 import com.example.commoncustomizecore.api.weChat.miniprogram.rsp.LoginRsp;
 import com.example.commoncustomizecore.api.weChat.miniprogram.service.MiniProgramService;
-import com.example.commoncustomizecore.api.weChat.miniprogram.service.impl.MiniProgramServiceImpl;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInfo;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.req.GetTokenReq;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendKfTextMessageReq;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendTemplateMessageReq;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.MessageDataInfo;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.req.info.TextInfo;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetTokenRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.OfficialAccountsService;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.impl.OfficialAccountsServiceImpl;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.util.OfficialAccountUtil;
 import com.example.commoncustomizecore.info.MiniTemplateInfo;
 import com.example.commoncustomizecore.info.OfficialAccountsInfo;
-import com.example.commoncustomizecore.info.WeChatInfo;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.message.BasicHeader;
@@ -52,20 +48,20 @@ public class CommonsTest
 
     static
     {
-        OfficialAccountsService wxService = new OfficialAccountsServiceImpl();
-        GetTokenReq getTokenReq = new GetTokenReq();
-        WeChatInfo weChatInfo = new WeChatInfo();
-        miniAppId = weChatInfo.getAppId();
-        miniAppSecret = weChatInfo.getAppSecret();
-        getTokenReq.setAppid(miniAppId);
-        getTokenReq.setSecret(miniAppSecret);
+//        OfficialAccountsService wxService = new OfficialAccountsServiceImpl();
+//        GetTokenReq getTokenReq = new GetTokenReq();
+//        WeChatInfo weChatInfo = new WeChatInfo();
+//        miniAppId = weChatInfo.getAppId();
+//        miniAppSecret = weChatInfo.getAppSecret();
+//        getTokenReq.setAppid(miniAppId);
+//        getTokenReq.setSecret(miniAppSecret);
         // 当使用多态方式调用方法时，首先检查父类中是否有该方法，如果有，再去调用子类的同名方法；如果没有，则编译错误。
-        GetTokenRsp getTokenRsp = wxService.getAccessToken(getTokenReq);
-        token = getTokenRsp.getAccess_token();
-        miniService = new MiniProgramServiceImpl();
+//        GetTokenRsp getTokenRsp = wxService.getAccessToken(getTokenReq);
+//        token = getTokenRsp.getAccess_token();
+//        miniService = new MiniProgramServiceImpl();
     }
 
-    @Test
+//    @Test
     public void sendTemplateMessage()
     {
         /*JSONObject jsonObject = new JSONObject();
@@ -95,14 +91,14 @@ public class CommonsTest
         wxService.sendTemplateMessage(req, token);
     }
 
-    @Test
+//    @Test
     public void getTemplateList()
     {
         OfficialAccountsService wxService = new OfficialAccountsServiceImpl();
         System.out.println(wxService.getTemplateList(token));
     }
 
-    @Test
+//    @Test
     public void sendKfMessage()
     {
         OfficialAccountsService wxService = new OfficialAccountsServiceImpl();
@@ -114,7 +110,7 @@ public class CommonsTest
         wxService.sendKfMessage(req, token);
     }
 
-    @Test
+//    @Test
     public void setJson()
     {
         WXBaseRsp rsp = new WXBaseRsp();
@@ -123,7 +119,7 @@ public class CommonsTest
         System.out.println(rspString);
     }
 
-    @Test
+//    @Test
     public void testCommons()
     {
         try
@@ -169,7 +165,7 @@ public class CommonsTest
 
     }
 
-    @Test
+//    @Test
     public void testLogin()
     {
         LoginReq req = new LoginReq();
@@ -181,14 +177,14 @@ public class CommonsTest
         System.out.println(rsp);
     }
 
-    @Test
+//    @Test
     public void getCategory()
     {
 
         miniService.getCategory(token);
     }
 
-    @Test
+//    @Test
     public void getPubTemplateTitleList()
     {
         GetPubTemplateTitlesReq req = new GetPubTemplateTitlesReq();
@@ -199,13 +195,13 @@ public class CommonsTest
         System.out.println(miniService.getPubTemplateTitleList(req, token));
     }
 
-    @Test
+//    @Test
     public void getMiniTemplateList()
     {
         System.out.println(miniService.getTemplateList(token));
     }
 
-    @Test
+//    @Test
     public void sendMiniTemplateMessage()
     {
         SendMiniTemplateMessageReq req = new SendMiniTemplateMessageReq();

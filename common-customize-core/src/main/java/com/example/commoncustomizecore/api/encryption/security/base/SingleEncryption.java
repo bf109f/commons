@@ -58,7 +58,7 @@ public abstract class SingleEncryption implements SecurityService
         StringBuilder hex = new StringBuilder();
         for (byte datum : data)
         {
-            int h = datum & 0XFF;
+            int h = datum & 0xff;
             if (h < 16)
             {
                 hex.append("0");
@@ -76,7 +76,20 @@ public abstract class SingleEncryption implements SecurityService
             if (StringUtils.isBlank(charset))
                 charset = "utf-8";
             MessageDigest messageDigest = MessageDigest.getInstance(model);
-            return parseByteArray2HexStr(messageDigest.digest((prefix + content + suffix).getBytes(charset)));
+            if (StringUtils.isNotBlank(prefix) && StringUtils.isNotBlank(suffix))
+            {
+                return parseByteArray2HexStr(messageDigest.digest((prefix + content + suffix).getBytes(charset)));
+            } else if (StringUtils.isNotBlank(prefix))
+            {
+                return parseByteArray2HexStr(messageDigest.digest((prefix + content).getBytes(charset)));
+            } else if (StringUtils.isNotBlank(suffix))
+            {
+                return parseByteArray2HexStr(messageDigest.digest((content + suffix).getBytes(charset)));
+            } else
+            {
+                return parseByteArray2HexStr(messageDigest.digest(content.getBytes(charset)));
+            }
+
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e)
         {
             LOGGER.error(e.getMessage(), e);

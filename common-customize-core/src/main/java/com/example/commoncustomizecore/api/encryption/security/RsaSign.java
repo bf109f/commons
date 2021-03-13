@@ -13,12 +13,17 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 /**
- * RSA 公钥加签 私钥验签
+ * RSA 公钥验签 私钥加签
  */
 public class RsaSign extends AsymmetricEncryption
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(RsaSign.class);
 
+    /**
+     *
+     * @param privateFile 私钥文件
+     * @param publicFile 公钥文件
+     */
     public RsaSign(File privateFile, File publicFile)
     {
         super(privateFile, publicFile);
@@ -30,6 +35,7 @@ public class RsaSign extends AsymmetricEncryption
     }
 
 
+    @Deprecated
     @Override
     public String decrypt(String content)
     {
