@@ -1,6 +1,6 @@
 package com.test.sftp.core.api;
 
-public class Sftp implements SftpService
+public class Sftp implements SftpSource
 {
     /**
      * 端口号
@@ -37,23 +37,4 @@ public class Sftp implements SftpService
 
     }
 
-
-
-    @Override
-    public void upload()
-    {
-
-    }
-
-    @Override
-    public void download()
-    {
-
-    }
-
-    @Override
-    public void delete()
-    {
-
-    }
 }
