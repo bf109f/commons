@@ -1,49 +1,45 @@
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
+import model.TicketInfo;
+import thread.TicketThread;
 
-public class TestThread extends Thread
+import java.util.LinkedList;
+
+public class TestThread
 {
-    private volatile static Integer total = 10;
 
-    private final String name;
-
-//    private CountDownLatch countDownLatch = new CountDownLatch(20);
-
-    public TestThread(String name)
+    public static void testA()
     {
-        this.name = name;
+        new Thread(new thread.TestThread("1"));
+        new Thread(new thread.TestThread("2"));
+        new Thread(new thread.TestThread("3"));
     }
 
-    @Override
-    public void run()
+    public static void testB()
     {
-        try
+        thread.TestThread thread = new thread.TestThread("thread.TestThread");
+        for (int i = 0; i < 30; i++)
         {
-            Thread.sleep(500);
-        } catch (InterruptedException e)
+            // 多个线程共享同一个对象的run方法
+            new Thread(thread).start();
+        }
+    }
+
+
+    public static void testC()
+    {
+        LinkedList<TicketInfo> ticketInfos = new LinkedList<>();
+        for (int i = 0; i < 50000; i++)
         {
-            e.printStackTrace();
+            ticketInfos.add(new TicketInfo(String.valueOf(i)));
         }
-
-
-        synchronized (total)
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 5; i++)
         {
-            if (total > 0)
-            {
-                synchronized (total)
-                {
-                    if (total > 0)
-                    {
-                        total -- ;
-                        System.out.println(Thread.currentThread().getName() + "[" + name + "]买到了票，票号[" + total + "]");
-                    }
-
-                }
-            } else
-            {
-                System.out.println("无票啦");
-            }
+            new TicketThread(ticketInfos, startTime).start();
         }
-        }
+    }
 
+    public static void main(String[] args)
+    {
+        testC();
+    }
 }
