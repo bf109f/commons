@@ -6,6 +6,11 @@ import model.BookTable;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * 使用lock进行读写分离，顺序执行
+ * 读可以共享资源
+ * 写不可以共享资源
+ */
 public class LockTest
 {
     public static void main(String[] args)
