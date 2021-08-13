@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.httputils.HttpUtils;
 import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.req.AddKfReq;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendKfTextMessageReq;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.req.SendTemplateMessageReq;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.req.*;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetAuthAccessTokenRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetTemplateListRsp;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetUserInfoRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.OfficialAccountsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -18,6 +18,25 @@ public class OfficialAccountsServiceImpl extends OfficialAccountsService
 {
 
     private static final Logger LOG = LoggerFactory.getLogger(OfficialAccountsServiceImpl.class);
+
+    @Override
+    public GetAuthAccessTokenRsp getAuthAccessToken(GetAuthAccessTokenReq req) throws CommonsCoreException
+    {
+        LOG.info("getAuthAccessToken req = {}", req);
+        String wxRsp = HttpUtils.sendGet(req,"https://api.weixin.qq.com/sns/oauth2/access_token");
+        LOG.info("getAuthAccessToken rsp = {}", wxRsp);
+        return JSON.parseObject(wxRsp, GetAuthAccessTokenRsp.class);
+    }
+
+    @Override
+    public GetUserInfoRsp getWechatUserInfo(GetUserInfoReq req) throws CommonsCoreException
+    {
+        LOG.info("getWechatUserInfo req = {}", req);
+        String wxRsp = HttpUtils.sendGet(req, "https://api.weixin.qq.com/sns/userinfo");
+        LOG.info("getWechatUserInfo rsp = {}", wxRsp);
+        return JSON.parseObject(wxRsp, GetUserInfoRsp.class);
+    }
+
 
     @Override
     public void addKf(AddKfReq req, String token) throws CommonsCoreException

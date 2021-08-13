@@ -1,10 +1,11 @@
 package com.example.commoncustomizecore.api.weChat.officialaccounts.rsp;
 
+import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 @Data
-public class GetTokenRsp
+public class GetTokenRsp extends WXBaseRsp
 {
     private String access_token;
 

@@ -1,17 +1,15 @@
 package com.example.commoncustomizecore.api.weChat.officialaccounts.rsp;
 
 import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
-import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.vo.TemplateVo;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.vo.WechatUserVo;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.List;
-
 @Data
-public class GetTemplateListRsp extends WXBaseRsp
+public class GetUserInfoRsp extends WXBaseRsp
 {
-    private List<TemplateVo> template_list;
+    private WechatUserVo userInfo;
 
     @Override
     public String toString()

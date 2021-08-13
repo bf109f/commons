@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.commoncustomizecore.api.bean.BeanUtils;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import com.example.commoncustomizecore.api.utils.AssertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -48,12 +49,10 @@ public class HttpUtils
      * @param url 请求地址
      * @return
      */
+    @Deprecated
     public static String sendGet(List<NameValuePair> params, String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
         try
         {
             URIBuilder builder = new URIBuilder(url);
@@ -74,13 +73,32 @@ public class HttpUtils
      */
     public static String sendGet(String param, String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
         HttpGet httpGet = new HttpGet(url + "?" + param);
         return request(httpGet);
+    }
+
+    /**
+     * httpClient发送get请求
+     * @param url 请求地址
+     * @param obj 请求参数
+     * @return
+     */
+    public static String sendGet(Object obj, String url)
+    {
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
+
+        try
+        {
+            URIBuilder builder = new URIBuilder(url);
+            builder.setParameters(obj2List(obj));
+            HttpGet httpGet = new HttpGet(builder.build());
+            return request(httpGet);
+        } catch (URISyntaxException e)
+        {
+            throw new CommonsCoreException("httpClient: " + e.getMessage());
+        }
     }
 
     /**
@@ -92,10 +110,7 @@ public class HttpUtils
      */
     public static String sendGet(String param, String url, Header...headers)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
         URI uri;
         try
@@ -124,10 +139,7 @@ public class HttpUtils
      */
     public static String sendGet(String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
         HttpGet httpGet = new HttpGet(url);
         return request(httpGet);
@@ -143,10 +155,7 @@ public class HttpUtils
      */
     public static String sendPost(List<NameValuePair> requestData, String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
         try
         {
@@ -170,10 +179,7 @@ public class HttpUtils
      */
     public static String sendPost(String req, String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
 
         StringEntity reqEntity = new StringEntity(req, "utf-8");
@@ -193,15 +199,12 @@ public class HttpUtils
      */
     public static String sendPost(String url)
     {
-        if (StringUtils.isBlank(url))
-        {
-            throw new CommonsCoreException("httpClient: url不能为空");
-        }
+        AssertUtil.isBlank(url, "httpClient: url不能为空");
 
         // 构造httpPost对象
         HttpPost post = new HttpPost(url.trim());
 
-        return doPost(new StringEntity(null, "utf-8"), post);
+        return doPost(new StringEntity("", "utf-8"), post);
 
     }
 
