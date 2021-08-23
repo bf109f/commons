@@ -1,6 +1,8 @@
 package com.example.commoncustomizecore.test;
 
+import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.commons.TimeUtils;
+import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.httputils.HttpUtils;
 import com.example.commoncustomizecore.api.weChat.WXBaseRsp;
 import com.example.commoncustomizecore.api.weChat.miniprogram.model.TemplateDataInfo;
@@ -267,6 +269,22 @@ public class CommonsTest
         info.setTimestamp("1602577957");
         info.setToken("xhfhugrhh");
         System.out.println(OfficialAccountUtil.checkSignature(info));;
+    }
+
+    @Test
+    public void testUrlOrPath()
+    {
+        System.out.println(CommonCoreUtils.connectPathOrUrl(CommonConstant.CONNECT_TYPE_URL,
+                "http://localhost:6060",
+                "/user",
+                "login",
+                "/more/",
+                "ss/"));
+        System.out.println(CommonCoreUtils.connectPathOrUrl(CommonConstant.CONNECT_TYPE_PATH,
+                "/user\\a",
+                "b",
+                "/c/",
+                "d.png/"));
     }
 
 }

@@ -1,6 +1,9 @@
 package com.example.commoncustomizecore.api.commons;
 
+import com.example.commoncustomizecore.api.constants.CommonConstant;
+import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,42 @@ public class CommonCoreUtils
     {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
+
+
+
+    /**
+     * path路径分段地址连接
+     * @param paths
+     * @param type
+     * @see CommonConstant
+     * @return
+     */
+    public static String connectPathOrUrl(String type, String... paths)
+    {
+        if (StringUtils.isBlank(type))
+        {
+            throw new CommonsCoreException("连接类型不能为空");
+        }
+        if (paths.length == 0)
+        {
+            throw new CommonsCoreException("url段不能为空");
+        }
+
+        LOGGER.debug("路径地址列表 = {}", Arrays.toString(paths));
+        if (paths.length == 1)
+        {
+            return ArrayUtils.toString(paths);
+        }
+        if (CommonConstant.CONNECT_TYPE_URL.equals(type))
+        {
+            return CommonDetail.connectUrl(paths);
+        } else
+        {
+            return CommonDetail.connectPath(paths);
+        }
+    }
+
+
 
     /**
      * 获取参数校验信息
