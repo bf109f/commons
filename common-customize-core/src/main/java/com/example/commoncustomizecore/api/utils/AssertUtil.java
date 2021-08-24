@@ -13,6 +13,14 @@ public class AssertUtil
         }
     }
 
+    public static void isTrue(boolean result, String message)
+    {
+        if (!result)
+        {
+            throw new CommonsCoreException(StringUtils.isEmpty(message)? "result is false": message);
+        }
+    }
+
     public static void isBlank(String content, String message)
     {
         if (StringUtils.isBlank(content))

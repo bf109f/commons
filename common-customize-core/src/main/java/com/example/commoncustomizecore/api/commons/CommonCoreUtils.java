@@ -2,6 +2,7 @@ package com.example.commoncustomizecore.api.commons;
 
 import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import com.example.commoncustomizecore.api.utils.AssertUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +57,24 @@ public class CommonCoreUtils
         }
     }
 
-
+    /**
+     * 根据文件路径获取文件
+     * @param path
+     * @return
+     */
+    public static File getFileByPath(String path)
+    {
+        if (StringUtils.isBlank(path))
+        {
+            throw new CommonsCoreException("文件目录路径为空");
+        }
+        File file = new File(path);
+        if (!file.getParentFile().exists())
+        {
+            AssertUtil.isTrue(file.getParentFile().mkdirs(), "创建文件夹失败");
+        }
+        return file;
+    }
 
     /**
      * 获取参数校验信息

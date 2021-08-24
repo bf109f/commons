@@ -30,10 +30,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -313,7 +310,16 @@ public class HttpUtils
             {
                 getTrance(response);
                 HttpEntity entity = response.getEntity();
-                rsp = EntityUtils.toString(entity, "UTF-8");
+                String contentType = entity.getContentType().getValue();
+                if (StringUtils.isNotBlank(contentType) && contentType.contains("image"))
+                {
+                    // 将图片保存转化为base64字符串
+                    rsp = Base64.getEncoder().encodeToString(EntityUtils.toByteArray(entity));
+                } else
+                {
+                    rsp = EntityUtils.toString(entity, "UTF-8");
+                }
+
                 if (response.getStatusLine().getStatusCode() == 200)
                 {
                     return rsp;
