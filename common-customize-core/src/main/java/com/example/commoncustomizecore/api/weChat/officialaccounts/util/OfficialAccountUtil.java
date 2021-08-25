@@ -1,6 +1,7 @@
 package com.example.commoncustomizecore.api.weChat.officialaccounts.util;
 
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import com.example.commoncustomizecore.api.utils.AssertUtil;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OfficialAccountUtil
 {
@@ -94,9 +97,9 @@ public class OfficialAccountUtil
         {
             MessageDigest sha = MessageDigest.getInstance("SHA");
 
-            byte[] byteArray = inStr.getBytes("UTF-8");
+            byte[] byteArray = inStr.getBytes(StandardCharsets.UTF_8);
             byte[] md5Bytes = sha.digest(byteArray);
-            StringBuffer hexValue = new StringBuffer();
+            StringBuilder hexValue = new StringBuilder();
             for (int i = 0; i < md5Bytes.length; i++)
             {
                 int val = ((int) md5Bytes[i]) & 0xff;
@@ -111,11 +114,25 @@ public class OfficialAccountUtil
         {
             LOG.error(e.getMessage(), e);
             throw new CommonsCoreException(e.getMessage());
-        } catch (UnsupportedEncodingException e)
-        {
-            LOG.error(e.getMessage(), e);
-            throw new CommonsCoreException(e.getMessage());
         }
+    }
+
+    public static String getMessageType(String message)
+    {
+        AssertUtil.isBlank(message);
+        String reg = "<MsgType>(.*?)</MsgType>";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(message);
+        while (matcher.find())
+        {
+            String str = matcher.group(1);
+            String subReg = "\\<\\!\\[CDATA\\[(.*?)\\]\\]\\>";
+            Pattern subPattern = Pattern.compile(subReg);
+            Matcher subMatcher = subPattern.matcher(str);
+
+            System.out.println(subMatcher.group(1));
+        }
+        return null;
     }
 
 }

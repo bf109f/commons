@@ -106,10 +106,7 @@ public class CommonCoreUtils
      */
     public static String getValidationMessage(String validationMessage)
     {
-        if (StringUtils.isBlank(validationMessage))
-        {
-            return "参数校验失败";
-        }
+        AssertUtil.isBlank(validationMessage, "参数校验失败");
         String reg = "\\{(.*?)\\}";
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(validationMessage);

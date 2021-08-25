@@ -1,6 +1,7 @@
 package com.example.commoncustomizecore.test;
 
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.xmlbean.TextMessage;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.util.OfficialAccountUtil;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.util.XmlUtil;
 import org.junit.Test;
 
@@ -27,7 +28,12 @@ public class XmlTest
         System.out.println(textMessage);
     }
 
-
+    @Test
+    public void getMessageType()
+    {
+        String xml = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName><CreateTime>1348831860</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[this is a test]]></Content><MsgId>1234567890123456</MsgId></xml>";
+        OfficialAccountUtil.getMessageType(xml);
+    }
 
 
 
