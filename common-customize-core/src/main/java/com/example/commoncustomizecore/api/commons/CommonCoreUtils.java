@@ -24,6 +24,29 @@ public class CommonCoreUtils
     }
 
 
+    /**
+     * BufferedReader 转字符串
+     * @param reader BufferedReader
+     * @return
+     */
+    public static String buffer2string(BufferedReader reader)
+    {
+        try
+        {
+            StringBuilder sb = new StringBuilder();
+            String line = reader.readLine();
+            while (StringUtils.isNotBlank(line))
+            {
+                sb.append(line);
+                line = reader.readLine();
+            }
+            return sb.toString();
+        } catch (IOException e)
+        {
+            LOGGER.error(e.getMessage(), e);
+            throw new CommonsCoreException("IO异常");
+        }
+    }
 
     /**
      * path路径分段地址连接

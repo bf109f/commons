@@ -14,6 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class TextMessage extends BaseMessage
 {
+    /**
+     * 文本消息内容
+     */
     @XmlElement(name = "Content")
     private String content;
 

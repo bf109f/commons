@@ -14,9 +14,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class ShortVideoMessage extends BaseMessage
 {
+    /**
+     * 视频消息媒体id，可以调用获取临时素材接口拉取数据。
+     */
     @XmlElement(name = "MediaId")
     private String mediaId;
-    
+
+    /**
+     * 视频消息缩略图的媒体id，可以调用获取临时素材接口拉取数据。
+     */
     @XmlElement(name = "ThumbMediaId")
     private String thumbMediaId;
 

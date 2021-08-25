@@ -12,18 +12,33 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BaseMessage
 {
+    /**
+     * 开发者微信号
+     */
     @XmlElement(name = "ToUserName")
     private String toUserName;
 
+    /**
+     * 发送方帐号（一个OpenID）
+     */
     @XmlElement(name = "FromUserName")
     private String fromUserName;
 
+    /**
+     * 消息创建时间 （整型）
+     */
     @XmlElement(name = "CreateTime")
     private long createTime;
 
+    /**
+     * 消息类型，event
+     */
     @XmlElement(name = "MsgType")
     private String msgType;
 
+    /**
+     * 消息ID
+     */
     @XmlElement(name = "MsgId")
     private String msgId;
 

@@ -14,12 +14,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class LinkMessage extends BaseMessage
 {
+    /**
+     * 消息标题
+     */
     @XmlElement(name = "Title")
     private String title;
-    
+
+    /**
+     * 消息描述
+     */
     @XmlElement(name = "Description")
     private String description;
 
+    /**
+     * 消息链接
+     */
     @XmlElement(name = "Url")
     private String url;
 

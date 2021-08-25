@@ -27,14 +27,7 @@ public class OfficialAccountUtil
     {
         // 对集合进行排序
         String shaContent = shaEncode(sort(signInfo));
-
-        if (signInfo.getSignature().equals(shaContent))
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return signInfo.getSignature().equals(shaContent);
     }
 
     /**

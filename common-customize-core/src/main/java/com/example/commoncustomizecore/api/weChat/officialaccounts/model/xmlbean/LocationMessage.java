@@ -14,15 +14,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class LocationMessage extends BaseMessage
 {
+    /**
+     * 地理位置纬度
+     */
     @XmlElement(name = "Location_X")
     private String locationX;
-    
+
+    /**
+     * 地理位置经度
+     */
     @XmlElement(name = "Location_Y")
     private String locationY;
 
+    /**
+     * 地图缩放大小
+     */
     @XmlElement(name = "Scale")
     private String scale;
 
+    /**
+     * 地理位置信息
+     */
     @XmlElement(name = "Label")
     private String label;
 

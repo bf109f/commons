@@ -12,19 +12,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "xml")
-public class VideoMessage extends BaseMessage
+public class QRCodeEvent extends BaseMessage
 {
     /**
-     * 视频消息媒体id，可以调用获取临时素材接口拉取数据。
+     * 事件类型，subscribe
      */
-    @XmlElement(name = "MediaId")
-    private String mediaId;
+    @XmlElement(name = "Event")
+    private String event;
 
     /**
-     * 视频消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据。
+     * 事件KEY值，qrscene_为前缀，后面为二维码的参数值
      */
-    @XmlElement(name = "ThumbMediaId")
-    private String thumbMediaId;
+    @XmlElement(name = "EventKey")
+    private String eventKey;
+
+    /**
+     * 二维码的ticket，可用来换取二维码图片
+     */
+    @XmlElement(name = "Ticket")
+    private String ticket;
 
     @Override
     public String toString()

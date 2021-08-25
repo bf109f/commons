@@ -39,7 +39,7 @@ public class XmlUtil
         return sw.toString();
     }
 
-    public static <T extends BaseMessage> T xml2obj(Class clazz, String xmlStr)
+    public static <T extends BaseMessage> T xml2obj(Class<T> clazz, String xmlStr)
     {
         T xmlObject = null;
         try

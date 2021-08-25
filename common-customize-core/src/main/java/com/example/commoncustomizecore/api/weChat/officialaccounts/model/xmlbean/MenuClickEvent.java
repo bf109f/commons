@@ -12,19 +12,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "xml")
-public class VideoMessage extends BaseMessage
+public class MenuClickEvent extends BaseMessage
 {
     /**
-     * 视频消息媒体id，可以调用获取临时素材接口拉取数据。
+     * 事件类型，VIEW
      */
-    @XmlElement(name = "MediaId")
-    private String mediaId;
+    @XmlElement(name = "Event")
+    private String event;
 
     /**
-     * 视频消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据。
+     * 事件KEY值，设置的跳转URL
      */
-    @XmlElement(name = "ThumbMediaId")
-    private String thumbMediaId;
+    @XmlElement(name = "EventKey")
+    private String eventKey;
 
     @Override
     public String toString()

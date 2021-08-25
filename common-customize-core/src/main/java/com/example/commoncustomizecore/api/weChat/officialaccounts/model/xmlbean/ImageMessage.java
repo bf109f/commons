@@ -14,9 +14,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class ImageMessage extends BaseMessage
 {
+    /**
+     * 图片链接（由系统生成）
+     */
     @XmlElement(name = "PicUrl")
     private String picUrl;
 
+    /**
+     * 图片消息媒体id，可以调用获取临时素材接口拉取数据。
+     */
     @XmlElement(name = "MediaId")
     private String mediaId;
 

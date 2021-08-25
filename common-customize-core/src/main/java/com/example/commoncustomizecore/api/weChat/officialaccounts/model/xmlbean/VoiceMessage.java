@@ -14,12 +14,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xml")
 public class VoiceMessage extends BaseMessage
 {
+    /**
+     * 语音格式，如amr，speex等
+     */
     @XmlElement(name = "Format")
     private String format;
 
+    /**
+     * 语音消息媒体id，可以调用获取临时素材接口拉取数据。
+     */
     @XmlElement(name = "MediaId")
     private String mediaId;
 
+    /**
+     * 语音识别结果，UTF8编码
+     */
     @XmlElement(name = "Recognition")
     private String recognition;
 
