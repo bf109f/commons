@@ -1,5 +1,6 @@
 package com.example.commoncustomizecore.api.weChat.officialaccounts.util;
 
+import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.utils.AssertUtil;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInfo;
@@ -13,8 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class OfficialAccountUtil
 {
@@ -117,22 +117,40 @@ public class OfficialAccountUtil
         }
     }
 
+    /**
+     * 获取公众号微信消息类型
+     * @param message 微信公众号消息字符串
+     * @return 消息类型
+     */
     public static String getMessageType(String message)
     {
         AssertUtil.isBlank(message);
-        String reg = "<MsgType>(.*?)</MsgType>";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(message);
-        while (matcher.find())
+        String reg = "<MsgType><!\\[CDATA\\[(.*?)]]></MsgType>";
+        List<String> matchers = CommonCoreUtils.matchByRegex(reg, message);
+        if (matchers.size() > 0)
         {
-            String str = matcher.group(1);
-            String subReg = "\\<\\!\\[CDATA\\[(.*?)\\]\\]\\>";
-            Pattern subPattern = Pattern.compile(subReg);
-            Matcher subMatcher = subPattern.matcher(str);
-
-            System.out.println(subMatcher.group(1));
+            return matchers.get(0);
         }
         return null;
     }
+
+    /**
+     * 获取公众号微信事件类型
+     * @param message 微信公众号消息字符串
+     * @return
+     */
+    public static String getEventType(String message)
+    {
+        AssertUtil.isBlank(message);
+        String reg = "<Event><!\\[CDATA\\[(.*?)]]></Event>";
+        List<String> matchers = CommonCoreUtils.matchByRegex(reg, message);
+        if (matchers.size() > 0)
+        {
+            return matchers.get(0);
+        }
+        return null;
+    }
+
+
 
 }

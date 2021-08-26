@@ -100,6 +100,44 @@ public class CommonCoreUtils
     }
 
     /**
+     * 根据正则表达式匹配信息
+     * @param regex 正则表达式
+     * @param content 字符串内容
+     * @return 匹配到到字符串列表
+     */
+    public static List<String> matchByRegex(String regex, String content)
+    {
+        return matchByRegex(regex, content, -1);
+    }
+
+    /**
+     * 根据正则表达式匹配信息
+     * @param regex 正则表达式
+     * @param content 字符串内容
+     * @param limit 匹配次数 负数全部匹配
+     * @return 匹配到到字符串列表
+     */
+    public static List<String> matchByRegex(String regex, String content, int limit)
+    {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(content);
+        int count = 1;
+        List<String> list = new ArrayList<>();
+        while (matcher.find())
+        {
+            String str = matcher.group(1);
+            list.add(str);
+            if (limit > 0)
+            {
+                if (count > limit)
+                    break;
+                count ++;
+            }
+        }
+        return list;
+    }
+
+    /**
      * 获取参数校验信息
      * @param validationMessage ValidationException 返回信息
      * @return
@@ -107,7 +145,7 @@ public class CommonCoreUtils
     public static String getValidationMessage(String validationMessage)
     {
         AssertUtil.isBlank(validationMessage, "参数校验失败");
-        String reg = "\\{(.*?)\\}";
+        String reg = "\\{(.*?)}";
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(validationMessage);
         List<Map<String, String>> maps = new ArrayList<>();
