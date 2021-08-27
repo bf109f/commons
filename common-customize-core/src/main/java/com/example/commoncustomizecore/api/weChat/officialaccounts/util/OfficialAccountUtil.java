@@ -4,12 +4,14 @@ import com.example.commoncustomizecore.api.commons.CommonCoreUtils;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.utils.AssertUtil;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.model.SignInfo;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.model.xmlbean.BaseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -151,6 +153,28 @@ public class OfficialAccountUtil
         return null;
     }
 
+    /**
+     * 公众号消息扫码事件回复
+     * @param t
+     * @return
+     */
+    public static <F extends BaseMessage, T extends  BaseMessage> T replyMessage(F f, Class<T> t, String messageType)
+    {
+        AssertUtil.isBlank(messageType, "公众号消息类型为空");
+        try
+        {
 
+            T to = t.getDeclaredConstructor().newInstance();
+            to.setFromUserName(f.getToUserName());
+            to.setToUserName(f.getFromUserName());
+            to.setMsgType(messageType);
+            to.setCreateTime(System.currentTimeMillis());
+            return to;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        {
+            LOG.error(e.getMessage(), e);
+            throw new CommonsCoreException("对象实例化失败");
+        }
+    }
 
 }
