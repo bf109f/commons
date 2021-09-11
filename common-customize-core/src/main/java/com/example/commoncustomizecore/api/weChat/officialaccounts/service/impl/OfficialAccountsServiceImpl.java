@@ -11,6 +11,7 @@ import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.CreateQRC
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetAuthAccessTokenRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetTemplateListRsp;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.GetUserInfoRsp;
+import com.example.commoncustomizecore.api.weChat.officialaccounts.rsp.vo.WechatUserVo;
 import com.example.commoncustomizecore.api.weChat.officialaccounts.service.OfficialAccountsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,7 +41,10 @@ public class OfficialAccountsServiceImpl extends OfficialAccountsService
         LOG.info("getWechatUserInfo req = {}", req);
         String wxRsp = HttpUtils.sendGet(req, "https://api.weixin.qq.com/sns/userinfo");
         LOG.info("getWechatUserInfo rsp = {}", wxRsp);
-        return JSON.parseObject(wxRsp, GetUserInfoRsp.class);
+        WechatUserVo vo = JSON.parseObject(wxRsp, WechatUserVo.class);
+        GetUserInfoRsp rsp = new GetUserInfoRsp();
+        rsp.setUserInfo(vo);
+        return rsp;
     }
 
 
