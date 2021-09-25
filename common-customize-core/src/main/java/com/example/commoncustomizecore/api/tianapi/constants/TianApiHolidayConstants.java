@@ -1,6 +1,6 @@
 package com.example.commoncustomizecore.api.tianapi.constants;
 
-public interface GetHolidayConstants
+public interface TianApiHolidayConstants
 {
     /**
      * 0批量
@@ -26,4 +26,24 @@ public interface GetHolidayConstants
      * 1返回当天全部相关节日信息
      */
     int MODE_ALL = 1;
+
+    /**
+     * 工作日
+     */
+    int WORKING_DAY = 0;
+
+    /**
+     * 节假日
+     */
+    int HOLIDAYS = 1;
+
+    /**
+     * 双休日
+     */
+    int WEEKEND = 2;
+
+    /**
+     * 调休日 上班
+     */
+    int REST_DAY = 3;
 }

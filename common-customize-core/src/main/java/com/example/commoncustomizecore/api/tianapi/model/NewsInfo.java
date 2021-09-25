@@ -4,8 +4,6 @@ import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.List;
-
 @Data
 public class NewsInfo
 {
@@ -85,14 +83,14 @@ public class NewsInfo
     private int isnotwork;
 
     /**
-     * 节假日数组 ["2021-01-01","2021-01-02","2021-01-03"]
+     * 节假日数组 2021-09-19|2021-09-20|2021-09-21
      */
-    private List<String> vacation;
+    private String vacation;
 
     /**
-     * 调休日数组 ["2021-12-26","2021-01-08"]
+     * 调休日数组 2021-09-26|2021-10-09
      */
-    private List<String> remark;
+    private String remark;
 
     /**
      * 薪资法定倍数

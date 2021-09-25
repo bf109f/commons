@@ -1,4 +1,4 @@
-package com.example.commoncustomizecore.api.commons;
+package com.example.commoncustomizecore.api.commons.detail;
 
 /**
  * IdWorker 单例防止id出现重复

@@ -1,11 +1,22 @@
 package com.example.commoncustomizecore.api.commons;
 
+import com.example.commoncustomizecore.api.commons.detail.CommonDetail;
+import com.example.commoncustomizecore.api.commons.detail.IdWorker;
 import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import com.example.commoncustomizecore.api.tianapi.TianApiService;
+import com.example.commoncustomizecore.api.tianapi.constants.TianApiHolidayConstants;
+import com.example.commoncustomizecore.api.tianapi.impl.TianApiServiceImpl;
+import com.example.commoncustomizecore.api.tianapi.model.TodayInfo;
+import com.example.commoncustomizecore.api.tianapi.req.GetHolidaysReq;
+import com.example.commoncustomizecore.api.tianapi.rsp.GetHolidaysRsp;
 import com.example.commoncustomizecore.api.utils.AssertUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +25,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommonCoreUtils
+public class CommonCoreUtils extends CommonDetail
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonCoreUtils.class);
 
@@ -207,9 +218,7 @@ public class CommonCoreUtils
     public static boolean isBase64(String str)
     {
         if (StringUtils.isBlank(str))
-        {
             return true;
-        }
         String decrypt = new String(Base64.decodeBase64(str));
         String base64 = Base64.encodeBase64String(decrypt.getBytes());
         return str.equals(base64);
@@ -222,22 +231,20 @@ public class CommonCoreUtils
      */
     public static String serialize2string(Object obj)
     {
-        ObjectOutputStream oos = null;
-        ByteArrayOutputStream baos = null;
-        try
+//        ObjectOutputStream oos = null;
+//        ByteArrayOutputStream baos = null;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos))
         {
             //序列化
-            baos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(baos);
+//            baos = new ByteArrayOutputStream();
+//            oos = new ObjectOutputStream(baos);
             oos.writeObject(obj);
             return Base64.encodeBase64String(baos.toByteArray());
         } catch (IOException e)
         {
             LOGGER.error(e.getMessage(), e);
             return null;
-        } finally
-        {
-            close(oos, baos);
         }
     }
 
@@ -248,42 +255,38 @@ public class CommonCoreUtils
      */
     public static byte [] serialize2array(Object obj)
     {
-        ObjectOutputStream oos = null;
-        ByteArrayOutputStream baos = null;
-        try
+//        ObjectOutputStream oos = null;
+//        ByteArrayOutputStream baos = null;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos))
         {
             //序列化
-            baos = new ByteArrayOutputStream();
-            oos = new ObjectOutputStream(baos);
+//            baos = new ByteArrayOutputStream();
+//            oos = new ObjectOutputStream(baos);
             oos.writeObject(obj);
             return baos.toByteArray();
         } catch (IOException e)
         {
             LOGGER.error(e.getMessage(), e);
             return null;
-        } finally
-        {
-            close(oos, baos);
         }
     }
 
     public static Object unSerialize(byte[] bytes)
     {
-        ByteArrayInputStream bais = null;
-        ObjectInputStream ois = null;
-        try
+//        ByteArrayInputStream bais = null;
+//        ObjectInputStream ois = null;
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+             ObjectInputStream ois = new ObjectInputStream(bais))
         {
             //反序列化
-            bais = new ByteArrayInputStream(bytes);
-            ois = new ObjectInputStream(bais);
+//            bais = new ByteArrayInputStream(bytes);
+//            ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e)
         {
             LOGGER.error(e.getMessage(), e);
             return null;
-        } finally
-        {
-            close(ois, bais);
         }
     }
 
@@ -294,25 +297,76 @@ public class CommonCoreUtils
      */
     public static Object unSerialize(String base64String)
     {
-        ByteArrayInputStream bais = null;
-        ObjectInputStream ois = null;
-        try
+//        ByteArrayInputStream bais = null;
+//        ObjectInputStream ois = null;
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(base64String));
+             ObjectInputStream ois = new ObjectInputStream(bais))
         {
             //反序列化
-            bais = new ByteArrayInputStream(Base64.decodeBase64(base64String));
-            ois = new ObjectInputStream(bais);
+//            bais = new ByteArrayInputStream(Base64.decodeBase64(base64String));
+//            ois = new ObjectInputStream(bais);
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e)
         {
             LOGGER.error(e.getMessage(), e);
             return null;
-        } finally
-        {
-            close(ois, bais);
         }
     }
 
-    private static void close(ObjectInputStream ois, ByteArrayInputStream bais)
+    public static List<TodayInfo> getCalendar(String key)
+    {
+        TianApiService service = new TianApiServiceImpl();
+        GetHolidaysReq req = new GetHolidaysReq();
+        LocalDate today = LocalDate.now();
+
+        req.setDate(today.toString("yyyy-MM-dd"));
+        req.setType(TianApiHolidayConstants.TYPE_YEAR);
+        req.setMode(TianApiHolidayConstants.MODE_ALL);
+        req.setKey(key);
+        GetHolidaysRsp rsp = service.getHolidays(req);
+
+        if (CollectionUtils.isNotEmpty(rsp.getNewslist()))
+        {
+            List<String> holidays = CommonDetail.getHolidayOrRestDays(rsp.getNewslist(), CommonConstant.HOLIDAYS);
+            List<String> restDay = CommonDetail.getHolidayOrRestDays(rsp.getNewslist(), CommonConstant.REST_DAY);
+
+            int thisYear = today.getYear();
+            LocalDate localDate = today.plusDays(1);
+
+            List<TodayInfo> list = new LinkedList<>();
+            for (; localDate.getYear() == thisYear; localDate = localDate.plusDays(1))
+            {
+//                System.out.println(localDate.toString("yyyy-MM-dd"));
+                String date = localDate.toString("yyyy-MM-dd");
+                TodayInfo info = new TodayInfo();
+                info.setDate(date);
+                info.setWeekday(localDate.getDayOfWeek());
+                if (CollectionUtils.isNotEmpty(holidays) && holidays.contains(date))
+                {
+                    info.setDayDesc(CommonConstant.HOLIDAYS);
+                    info.setDayCode(TianApiHolidayConstants.HOLIDAYS);
+                } else if (CollectionUtils.isNotEmpty(restDay) && restDay.contains(date))
+                {
+                    info.setDayDesc(CommonConstant.REST_DAY);
+                    info.setDayCode(TianApiHolidayConstants.REST_DAY);
+                } else if (localDate.getDayOfWeek() == DateTimeConstants.SATURDAY ||
+                        localDate.getDayOfWeek() == DateTimeConstants.SUNDAY)
+                {
+                    info.setDayDesc(CommonConstant.HOLIDAYS);
+                    info.setDayCode(TianApiHolidayConstants.WEEKEND);
+                } else
+                {
+                    info.setDayDesc(CommonConstant.REST_DAY);
+                    info.setDayCode(TianApiHolidayConstants.WORKING_DAY);
+                }
+                list.add(info);
+            }
+            return list;
+        }
+        return null;
+    }
+
+    /*private static void close(ObjectInputStream ois, ByteArrayInputStream bais)
     {
         if (ois != null)
         {
@@ -334,9 +388,9 @@ public class CommonCoreUtils
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
-    private static void close(ObjectOutputStream oos, ByteArrayOutputStream baos)
+    /*private static void close(ObjectOutputStream oos, ByteArrayOutputStream baos)
     {
         if (oos != null)
         {
@@ -358,5 +412,5 @@ public class CommonCoreUtils
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

@@ -1,18 +1,64 @@
-package com.example.commoncustomizecore.api.commons;
+package com.example.commoncustomizecore.api.commons.detail;
 
+import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
+import com.example.commoncustomizecore.api.tianapi.model.NewsInfo;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class CommonDetail
 {
+
+    protected static List<String> getHolidayOrRestDays(List<NewsInfo> newsInfos, String type)
+    {
+        if (CollectionUtils.isNotEmpty(newsInfos))
+        {
+            List<String> list = new ArrayList<>();
+            for (NewsInfo newsInfo : newsInfos)
+            {
+                List<String> days;
+                if (CommonConstant.HOLIDAYS.equals(type))
+                {
+                    days = getDays(newsInfo.getVacation());
+                    if (CollectionUtils.isEmpty(days))
+                        throw new CommonsCoreException("节假日为空:" + type);
+                } else
+                {
+                    days = getDays(newsInfo.getRemark());
+                }
+                if (CollectionUtils.isNotEmpty(days))
+                    list.addAll(days);
+
+            }
+            return list;
+        }
+        return null;
+    }
+
+
+    private static List<String> getDays(String days)
+    {
+        if (StringUtils.isNotBlank(days))
+        {
+            if (days.contains("|"))
+            {
+                String [] arr = days.split("\\|");
+                return Arrays.asList(arr);
+            }
+            return Collections.singletonList(days);
+        }
+        return null;
+    }
+
     /**
      * url分段地址连接
      * @param urls
      * @return
      */
-    static String connectUrl(String... urls)
+    protected static String connectUrl(String... urls)
     {
         StringJoiner joiner = new StringJoiner("/");
         for (int i = 0; i < urls.length; i++)
@@ -51,7 +97,7 @@ public class CommonDetail
      * @param paths
      * @return
      */
-    static String connectPath(String... paths)
+    protected static String connectPath(String... paths)
     {
         StringJoiner joiner = new StringJoiner(File.separator);
         for (int i = 0; i < paths.length; i++)
