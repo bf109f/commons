@@ -52,6 +52,11 @@ public class TodayInfo
      */
     private String info;
 
+    /**
+     * 是否计薪 1 计薪 0 不计薪
+     */
+    private int whetherPaid;
+
     @Override
     public String toString()
     {
