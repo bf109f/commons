@@ -94,11 +94,17 @@ public class TianXingHolidayCalendar extends AbstractHolidayCalendar
     protected List<String> getStatutoryPaydays()
     {
         List<String> list = getDays(this.newsInfos, CommonConstant.STATUTORY_PAYDAY);
-        if (list.size() != CommonConstant.STATUTORY_PAY_DAYS)
+        if (CollectionUtils.isEmpty(list))
         {
             LOG.error("法定记薪日: {}", list);
             throw new CommonsCoreException(
-                    String.format("法定节假日天数不正确，应为%s，实际%s", CommonConstant.STATUTORY_PAY_DAYS, list.size()));
+                    String.format("法定节假日天数不正确，应为%s，实际%s", CommonConstant.STATUTORY_PAY_DAYS, null));
+        } else if (list.size() != CommonConstant.STATUTORY_PAY_DAYS)
+        {
+            LOG.error("法定记薪日: {}", list);
+            throw new CommonsCoreException(
+                    String.format("法定节假日天数不正确，应为%s，实际%s", CommonConstant.STATUTORY_PAY_DAYS,
+                            list.size()));
         }
         return list;
     }
