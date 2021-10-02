@@ -1,22 +1,13 @@
 package com.example.commoncustomizecore.api.commons;
 
-import com.example.commoncustomizecore.api.commons.detail.CommonDetail;
-import com.example.commoncustomizecore.api.commons.detail.IdWorker;
+import com.example.commoncustomizecore.api.commons.inner.CommonInner;
+import com.example.commoncustomizecore.api.commons.inner.IdWorker;
 import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
-import com.example.commoncustomizecore.api.tianapi.TianApiService;
-import com.example.commoncustomizecore.api.tianapi.constants.TianApiHolidayConstants;
-import com.example.commoncustomizecore.api.tianapi.impl.TianApiServiceImpl;
-import com.example.commoncustomizecore.api.tianapi.model.TodayInfo;
-import com.example.commoncustomizecore.api.tianapi.req.GetHolidaysReq;
-import com.example.commoncustomizecore.api.tianapi.rsp.GetHolidaysRsp;
 import com.example.commoncustomizecore.api.utils.AssertUtil;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +16,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommonCoreUtils extends CommonDetail
+public class CommonCoreUtils extends CommonInner
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonCoreUtils.class);
 
@@ -84,10 +75,10 @@ public class CommonCoreUtils extends CommonDetail
         }
         if (CommonConstant.CONNECT_TYPE_URL.equals(type))
         {
-            return CommonDetail.connectUrl(paths);
+            return connectUrl(paths);
         } else
         {
-            return CommonDetail.connectPath(paths);
+            return connectPath(paths);
         }
     }
 
@@ -311,59 +302,6 @@ public class CommonCoreUtils extends CommonDetail
             LOGGER.error(e.getMessage(), e);
             return null;
         }
-    }
-
-    public static List<TodayInfo> getCalendar(String key)
-    {
-        TianApiService service = new TianApiServiceImpl();
-        GetHolidaysReq req = new GetHolidaysReq();
-        LocalDate today = LocalDate.now();
-
-        req.setDate(today.toString("yyyy-MM-dd"));
-        req.setType(TianApiHolidayConstants.TYPE_YEAR);
-        req.setMode(TianApiHolidayConstants.MODE_ALL);
-        req.setKey(key);
-        GetHolidaysRsp rsp = service.getHolidays(req);
-
-        if (CollectionUtils.isNotEmpty(rsp.getNewslist()))
-        {
-            List<String> holidays = CommonDetail.getHolidayOrRestDays(rsp.getNewslist(), CommonConstant.HOLIDAYS);
-            List<String> restDay = CommonDetail.getHolidayOrRestDays(rsp.getNewslist(), CommonConstant.REST_DAY);
-
-            int thisYear = today.getYear();
-            LocalDate localDate = today.plusDays(1);
-
-            List<TodayInfo> list = new LinkedList<>();
-            for (; localDate.getYear() == thisYear; localDate = localDate.plusDays(1))
-            {
-//                System.out.println(localDate.toString("yyyy-MM-dd"));
-                String date = localDate.toString("yyyy-MM-dd");
-                TodayInfo info = new TodayInfo();
-                info.setDate(date);
-                info.setWeekday(localDate.getDayOfWeek());
-                if (CollectionUtils.isNotEmpty(holidays) && holidays.contains(date))
-                {
-                    info.setDayDesc(CommonConstant.HOLIDAYS);
-                    info.setDayCode(TianApiHolidayConstants.HOLIDAYS);
-                } else if (CollectionUtils.isNotEmpty(restDay) && restDay.contains(date))
-                {
-                    info.setDayDesc(CommonConstant.REST_DAY);
-                    info.setDayCode(TianApiHolidayConstants.REST_DAY);
-                } else if (localDate.getDayOfWeek() == DateTimeConstants.SATURDAY ||
-                        localDate.getDayOfWeek() == DateTimeConstants.SUNDAY)
-                {
-                    info.setDayDesc(CommonConstant.HOLIDAYS);
-                    info.setDayCode(TianApiHolidayConstants.WEEKEND);
-                } else
-                {
-                    info.setDayDesc(CommonConstant.REST_DAY);
-                    info.setDayCode(TianApiHolidayConstants.WORKING_DAY);
-                }
-                list.add(info);
-            }
-            return list;
-        }
-        return null;
     }
 
     /*private static void close(ObjectInputStream ois, ByteArrayInputStream bais)

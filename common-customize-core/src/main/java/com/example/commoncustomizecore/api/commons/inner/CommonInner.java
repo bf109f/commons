@@ -1,58 +1,12 @@
-package com.example.commoncustomizecore.api.commons.detail;
+package com.example.commoncustomizecore.api.commons.inner;
 
-import com.example.commoncustomizecore.api.constants.CommonConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
-import com.example.commoncustomizecore.api.tianapi.model.NewsInfo;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.StringJoiner;
 
-public class CommonDetail
+public class CommonInner
 {
-
-    protected static List<String> getHolidayOrRestDays(List<NewsInfo> newsInfos, String type)
-    {
-        if (CollectionUtils.isNotEmpty(newsInfos))
-        {
-            List<String> list = new ArrayList<>();
-            for (NewsInfo newsInfo : newsInfos)
-            {
-                List<String> days;
-                if (CommonConstant.HOLIDAYS.equals(type))
-                {
-                    days = getDays(newsInfo.getVacation());
-                    if (CollectionUtils.isEmpty(days))
-                        throw new CommonsCoreException("节假日为空:" + type);
-                } else
-                {
-                    days = getDays(newsInfo.getRemark());
-                }
-                if (CollectionUtils.isNotEmpty(days))
-                    list.addAll(days);
-
-            }
-            return list;
-        }
-        return null;
-    }
-
-
-    private static List<String> getDays(String days)
-    {
-        if (StringUtils.isNotBlank(days))
-        {
-            if (days.contains("|"))
-            {
-                String [] arr = days.split("\\|");
-                return Arrays.asList(arr);
-            }
-            return Collections.singletonList(days);
-        }
-        return null;
-    }
-
     /**
      * url分段地址连接
      * @param urls

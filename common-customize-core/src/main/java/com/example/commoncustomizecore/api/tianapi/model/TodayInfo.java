@@ -33,6 +33,16 @@ public class TodayInfo
     private String cnWeekday;
 
     /**
+     * 农历年月日
+     */
+    private String lunarYearMonthDay;
+
+    /**
+     * 农历月日
+     */
+    private String lunarMonthDay;
+
+    /**
      * 农历年
      */
     private String lunarYear;
