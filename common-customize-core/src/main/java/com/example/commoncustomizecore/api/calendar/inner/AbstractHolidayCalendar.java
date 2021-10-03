@@ -99,7 +99,7 @@ public abstract class AbstractHolidayCalendar
         {
             String date = localDate.toString(CommonConstant.DATE_FORMAT_YEAR_MONTH_DAY);
             TodayInfo info = new TodayInfo();
-            info.setDate(date);
+            info.setDate(localDate);
             info.setWeekday(localDate.getDayOfWeek());
 
             LunarCalendar calendar = LunarCalendar.solar2Lunar(localDate.toDateTimeAtCurrentTime().toGregorianCalendar());

@@ -3,6 +3,7 @@ package com.example.commoncustomizecore.api.tianapi.model;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.LocalDate;
 
 @Data
 public class TodayInfo
@@ -10,7 +11,7 @@ public class TodayInfo
     /**
      * 当前阳历日期
      */
-    private String date;
+    private LocalDate date;
 
     /**
      * 日期类型，为0表示工作日、为1节假日、为2双休日、3为调休日（上班）
