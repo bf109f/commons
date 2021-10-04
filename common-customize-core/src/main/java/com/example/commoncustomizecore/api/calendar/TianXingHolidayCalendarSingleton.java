@@ -2,7 +2,7 @@ package com.example.commoncustomizecore.api.calendar;
 
 import com.example.commoncustomizecore.api.calendar.inner.AbstractHolidayCalendar;
 import com.example.commoncustomizecore.api.calendar.inner.HolidayCalendarCacheInfo;
-import com.example.commoncustomizecore.api.constants.CommonConstant;
+import com.example.commoncustomizecore.api.constants.DateConstant;
 import com.example.commoncustomizecore.api.exception.CommonsCoreException;
 import com.example.commoncustomizecore.api.tianapi.TianApiService;
 import com.example.commoncustomizecore.api.tianapi.constants.TianApiHolidayConstants;
@@ -70,7 +70,7 @@ public class TianXingHolidayCalendarSingleton extends AbstractHolidayCalendar
             AssertUtil.isBlank(key, "天行api密钥为空");
             TianApiService service = new TianApiServiceImpl();
             GetHolidaysReq req = new GetHolidaysReq();
-            req.setDate(LocalDate.now().toString(CommonConstant.DATE_FORMAT_YEAR_MONTH_DAY));
+            req.setDate(LocalDate.now().toString(DateConstant.DATE_FORMAT_YEAR_MONTH_DAY));
             req.setType(TianApiHolidayConstants.TYPE_YEAR);
             req.setMode(TianApiHolidayConstants.MODE_ALL);
             req.setKey(key);
@@ -91,24 +91,24 @@ public class TianXingHolidayCalendarSingleton extends AbstractHolidayCalendar
     @Override
     protected List<String> getHolidays(int year)
     {
-        return getDays(year, CommonConstant.HOLIDAYS);
+        return getDays(year, DateConstant.HOLIDAYS);
     }
 
     @Override
     protected List<String> getStatutoryPaydays(int year)
     {
         List<String> list =
-                getDays(year, CommonConstant.STATUTORY_PAYDAY);
+                getDays(year, DateConstant.STATUTORY_PAYDAY);
         if (CollectionUtils.isEmpty(list))
         {
             LOG.error("法定记薪日: {}", list);
             throw new CommonsCoreException(
-                    String.format("法定节假日天数不正确，应为%s，实际%s", CommonConstant.STATUTORY_PAY_DAYS, null));
-        } else if (list.size() != CommonConstant.STATUTORY_PAY_DAYS)
+                    String.format("法定节假日天数不正确，应为%s，实际%s", DateConstant.STATUTORY_PAY_DAYS, null));
+        } else if (list.size() != DateConstant.STATUTORY_PAY_DAYS)
         {
             LOG.error("法定记薪日: {}", list);
             throw new CommonsCoreException(
-                    String.format("法定节假日天数不正确，应为%s，实际%s", CommonConstant.STATUTORY_PAY_DAYS,
+                    String.format("法定节假日天数不正确，应为%s，实际%s", DateConstant.STATUTORY_PAY_DAYS,
                             list.size()));
         }
         return list;
@@ -117,7 +117,7 @@ public class TianXingHolidayCalendarSingleton extends AbstractHolidayCalendar
     @Override
     protected List<String> getAdjustRestDays(int year)
     {
-        return getDays(year, CommonConstant.REST_DAY);
+        return getDays(year, DateConstant.REST_DAY);
     }
 
     /**
@@ -135,12 +135,12 @@ public class TianXingHolidayCalendarSingleton extends AbstractHolidayCalendar
             for (NewsInfo newsInfo : newsInfos)
             {
                 List<String> days;
-                if (CommonConstant.HOLIDAYS.equals(type))
+                if (DateConstant.HOLIDAYS.equals(type))
                 {
                     days = getDays(newsInfo.getVacation());
                     if (CollectionUtils.isEmpty(days))
                         throw new CommonsCoreException("节假日为空:" + type);
-                } else if (CommonConstant.REST_DAY.equals(type))
+                } else if (DateConstant.REST_DAY.equals(type))
                 {
                     days = getDays(newsInfo.getRemark());
                 } else

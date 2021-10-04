@@ -1,7 +1,7 @@
 package com.example.commoncustomizecore.api.calendar.inner;
 
 import com.example.commoncustomizecore.api.calendar.HolidayCalendarService;
-import com.example.commoncustomizecore.api.constants.CommonConstant;
+import com.example.commoncustomizecore.api.constants.DateConstant;
 import com.example.commoncustomizecore.api.tianapi.constants.TianApiHolidayConstants;
 import com.example.commoncustomizecore.api.tianapi.model.TodayInfo;
 import com.github.heqiao2010.lunar.LunarCalendar;
@@ -70,7 +70,7 @@ public abstract class AbstractHolidayCalendar implements HolidayCalendarService
         List<TodayInfo> list = new LinkedList<>();
         for (; localDate.getYear() == year; localDate = localDate.plusDays(1))
         {
-            String date = localDate.toString(CommonConstant.DATE_FORMAT_YEAR_MONTH_DAY);
+            String date = localDate.toString(DateConstant.DATE_FORMAT_YEAR_MONTH_DAY);
             TodayInfo info = new TodayInfo();
             info.setDate(localDate);
             info.setWeekday(localDate.getDayOfWeek());
@@ -81,34 +81,34 @@ public abstract class AbstractHolidayCalendar implements HolidayCalendarService
             if (CollectionUtils.isNotEmpty(holidays) && holidays.contains(date))
             {
                 // 节假日
-                info.setDayDesc(CommonConstant.HOLIDAYS);
+                info.setDayDesc(DateConstant.HOLIDAYS);
                 info.setDayCode(TianApiHolidayConstants.HOLIDAYS);
                 if (statutoryPaydays.contains(date) || statutoryPaydays.contains(info.getLunarMonthDay()))
                 {
-                    info.setWhetherPaid(CommonConstant.PAY);
+                    info.setWhetherPaid(DateConstant.PAY);
                 } else
                 {
-                    info.setWhetherPaid(CommonConstant.NOT_PAY);
+                    info.setWhetherPaid(DateConstant.NOT_PAY);
                 }
             } else if (CollectionUtils.isNotEmpty(adjustRestDays) && adjustRestDays.contains(date))
             {
                 // 调休日 上班
-                info.setDayDesc(CommonConstant.REST_DAY);
+                info.setDayDesc(DateConstant.REST_DAY);
                 info.setDayCode(TianApiHolidayConstants.REST_DAY);
-                info.setWhetherPaid(CommonConstant.PAY);
+                info.setWhetherPaid(DateConstant.PAY);
             } else if (localDate.getDayOfWeek() == DateTimeConstants.SATURDAY ||
                     localDate.getDayOfWeek() == DateTimeConstants.SUNDAY)
             {
                 // 周末
-                info.setDayDesc(CommonConstant.HOLIDAYS);
+                info.setDayDesc(DateConstant.HOLIDAYS);
                 info.setDayCode(TianApiHolidayConstants.WEEKEND);
-                info.setWhetherPaid(CommonConstant.NOT_PAY);
+                info.setWhetherPaid(DateConstant.NOT_PAY);
             } else
             {
                 // 工作日
-                info.setDayDesc(CommonConstant.REST_DAY);
+                info.setDayDesc(DateConstant.REST_DAY);
                 info.setDayCode(TianApiHolidayConstants.WORKING_DAY);
-                info.setWhetherPaid(CommonConstant.PAY);
+                info.setWhetherPaid(DateConstant.PAY);
             }
             list.add(info);
         }
