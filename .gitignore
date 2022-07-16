@@ -1,0 +1,6 @@
+/.idea
+/target
+/common-customize-core
+*/target/
+*/.idea
+/sftp/
