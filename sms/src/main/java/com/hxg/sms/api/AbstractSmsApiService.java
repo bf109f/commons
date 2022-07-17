@@ -14,14 +14,21 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractSmsApiService<P extends SmsBaseRsp, Q extends SmsBaseReq> implements SmsApiService
 {
+    // https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-customconstraints-simple
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     /**
      *
      * @param req
@@ -29,6 +36,9 @@ public abstract class AbstractSmsApiService<P extends SmsBaseRsp, Q extends SmsB
      * @return
      */
     protected P request(Q req, String url, Class<P> pClass) {
+//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+//        validator = factory.getValidator();
+        Set<ConstraintViolation<Q>> constraintViolations = validator.validate(req);
         request(req, url, pClass, new Header[]{});
         return null;
     }
