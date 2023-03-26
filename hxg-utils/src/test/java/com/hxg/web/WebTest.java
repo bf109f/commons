@@ -28,23 +28,21 @@ public class WebTest {
 
         try {
             for (WebElement parentLi : rootLis) {
+                //菜单测试
                 testPage(driver, parentLi);
-
-                testMenu(driver, rootLis.get(1));
-                for (WebElement webElement : rootLis) {
-                    if ("招聘邀约记录".equals(webElement.getText())) {
-
-                    }
-                }
             }
         } catch (Exception e) {
 
-        }
-        finally {
+        } finally {
             driver.quit();
         }
     }
 
+    /**
+     * 获取驱动
+     *
+     * @return 驱动
+     */
     public WebDriver getDriver() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
@@ -53,6 +51,12 @@ public class WebTest {
         return new ChromeDriver(options);
     }
 
+    /**
+     * 登录
+     *
+     * @param driver 驱动
+     * @param url    登录地址
+     */
     public void login(WebDriver driver, String url) {
         driver.get(url);
         WebElement username = driver.findElement(By.name("username"));
@@ -65,7 +69,8 @@ public class WebTest {
 
     /**
      * 页面测试
-     * @param driver 驱动
+     *
+     * @param driver   驱动
      * @param parentLi 父菜单
      */
     public void testPage(WebDriver driver, WebElement parentLi) {
@@ -89,42 +94,89 @@ public class WebTest {
         }
     }
 
-    public void testMenu(WebDriver driver, WebElement webElement) {
+    /**
+     * 菜单测试
+     *
+     * @param driver 驱动
+     * @param menuLi 页面元素
+     */
+    public void testMenu(WebDriver driver, WebElement menuLi) {
         //点击菜单
-        webElement.click();
+        menuLi.click();
         //获取页面
-        WebElement mainContentPage = new WebDriverWait(driver, Duration.ofSeconds(10)).until(page -> page.findElement(By.className("wrapper")));
-        //判断页面上是否有tab
-        for (WebElement tab : mainContentPage.findElements(By.className("tmv-customize"))) {
-            testTab(driver, tab);
+        WebElement mainContentPage =
+                new WebDriverWait(driver, Duration.ofSeconds(10)).until(page -> page.findElement(By.className("wrapper")));
+        //
+
+        /*try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+
+        }*/
+        WebElement tabContent =
+                new WebDriverWait(driver, Duration.ofSeconds(10)).until(page -> page.findElement(By.cssSelector(".tmv-customize")));
+//        mainContentPage.findElement(By.cssSelector(".tmv-customize"));
+        //多tab页面
+        if (tabContent != null) {
+            List<WebElement> tabs = tabContent.findElements(By.tagName("li"));
+            if (tabs != null && tabs.size() > 0) {
+                for (WebElement tab : tabs) {
+                    testTab(driver, tab);
+                }
+            }
+        }
+        //无tab页面
+        else {
+
         }
     }
 
+    /**
+     * 多tab页面测试
+     *
+     * @param driver 驱动
+     * @param tab    tab
+     */
     public void testTab(WebDriver driver, WebElement tab) {
-        //点击tab
-        WebElement li = tab.findElement(By.tagName("li"));
-        if (li == null) {
-            return;
-        }
-        li.click();
-
+        tab.click();
         testSearch(driver);
     }
 
+    /**
+     * list页面表单查询
+     *
+     * @param driver 驱动
+     */
     public void testSearch(WebDriver driver) {
         //页面主体
         WebElement panelBody =
                 new WebDriverWait(driver, Duration.ofSeconds(10)).until(page -> page.findElement(By.className("panel-body")));
-        List<WebElement> formInputs = panelBody.findElement(By.tagName("form")).findElements(By.tagName("input"));
-        for (WebElement formInput : formInputs) {
+        WebElement form = panelBody.findElement(By.tagName("form"));
+        //页面输入框
+        List<WebElement> inputs = form.findElements(By.tagName("input"));
+        for (WebElement formInput : inputs) {
             if (formInput.isDisplayed()) {
                 formInput.sendKeys(formInput.getAttribute("id"));
             }
         }
+        //页面下拉列表
+        WebElement selects = form.findElement(By.tagName("select"));
+
     }
 
     @Test
     public void testSingle() {
-
+        WebDriver driver = getDriver();
+        login(driver, "");
+        WebElement menu =
+                new WebDriverWait(driver, Duration.ofSeconds(10)).until(page -> page.findElement(By.className("sidebar-sub-menu")));
+        //根菜单
+        List<WebElement> rootLis = menu.findElements(By.className("dcjq-parent-li"));
+        for (WebElement rootLi : rootLis) {
+            if (rootLi.getText().equals("项目报表")) {
+                rootLi.click();
+                testMenu(driver, rootLi.findElement(By.tagName("li")));
+            }
+        }
     }
 }
