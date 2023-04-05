@@ -1,0 +1,9 @@
+<code_scheme name="IDEACodeStyle">
+  <option name="RIGHT_MARGIN" value="120" />
+  <XML>
+    <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+  </XML>
+  <codeStyleSettings language="JAVA">
+    <option name="ELSE_ON_NEW_LINE" value="true" />
+  </codeStyleSettings>
+</code_scheme>
