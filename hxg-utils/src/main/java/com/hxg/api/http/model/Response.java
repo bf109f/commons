@@ -1,6 +1,7 @@
 package com.hxg.api.http.model;
 
 import lombok.Data;
+import org.joda.time.DateTime;
 
 @Data
 public class Response {
@@ -12,5 +13,20 @@ public class Response {
     /**
      * 响应码
      */
-    private int code;
+    private int httpCode;
+
+    /**
+     * 请求时间
+     */
+    private DateTime requestTime;
+
+    /**
+     * 响应时间
+     */
+    private DateTime responseTime;
+
+    /**
+     * 耗时
+     */
+    private long times;
 }

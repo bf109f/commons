@@ -1,12 +1,16 @@
 package com.hxg.api.http.interceptor.impl;
 
 import com.hxg.api.http.interceptor.ReqInterceptor;
-import org.apache.commons.lang3.StringUtils;
+import com.hxg.api.http.model.Request;
 
-public class StringTrimInterceptor implements ReqInterceptor<String> {
+public class StringTrimInterceptor implements ReqInterceptor {
     @Override
-    public String execute(String param) {
-        return StringUtils.isBlank(param) ? param : param.trim();
+    public void doInterceptor(Request request) {
+        Object param = request.getParam();
+        if (param instanceof String) {
+            param = ((String) request.getParam()).trim();
+            request.setParam(param);
+        }
     }
 
     @Override

@@ -16,15 +16,17 @@ import java.util.List;
 @AllArgsConstructor
 public class HttpClientSend implements HttpSend {
 
+    private HttpSave httpSave;
+
     /**
      * 请求参数处理
      */
-    private List<ReqInterceptor<?>> reqInterceptors;
+    private List<ReqInterceptor> reqInterceptors;
 
     /**
      * 响应数据处理
      */
-    private List<RspInterceptor<?>> rspInterceptors;
+    private List<RspInterceptor> rspInterceptors;
 
 
     @Override
