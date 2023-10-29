@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * 邮件自动配置类
  */
 @Configuration
+// 有这两个类 该配置类才生效
 @ConditionalOnClass(value = {SendMailService.class, SendMailServiceImpl.class})
 public class HxgMailAutoConfigure {
 
